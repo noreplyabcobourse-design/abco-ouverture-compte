@@ -14,7 +14,7 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;}
 
-/* ── HERO ── */
+/* -- HERO -- */
 .hero{background:linear-gradient(135deg,var(--green) 0%,#0e3d35 100%);padding:32px 24px 28px;text-align:center;position:relative;overflow:hidden;}
 .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 80% 20%,rgba(182,152,90,0.08) 0%,transparent 70%),repeating-linear-gradient(60deg,rgba(182,152,90,0.025) 0px,rgba(182,152,90,0.025) 1px,transparent 1px,transparent 48px);}
 .hero-logo{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:20px;position:relative;}
@@ -24,8 +24,8 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
 .hero h1{font-family:"Playfair Display",serif;font-size:22px;color:#fff;font-weight:600;position:relative;}
 .hero-gold-line{width:60px;height:2px;background:var(--gold);margin:12px auto 0;position:relative;}
 
-/* ── PROGRESS ── */
-.progress-wrap{background:var(--green);padding:16px 24px;position:sticky;top:0;z-index:50;box-shadow:0 2px 20px rgba(0,0,0,0.18);}
+/* -- PROGRESS -- */
+.progress-wrap{background:var(--green);padding:16px 24px;position:sticky;top:0;z-index:10;box-shadow:0 2px 20px rgba(0,0,0,0.18);}
 .steps-row{display:flex;align-items:flex-start;justify-content:space-between;max-width:520px;margin:0 auto;position:relative;}
 .progress-fill-wrap{position:absolute;top:50%;transform:translateY(-50%);left:0;right:0;height:1.5px;z-index:1;overflow:hidden;}
 .progress-fill{height:100%;background:var(--gold);width:0%;transition:width 0.4s ease;}
@@ -37,31 +37,31 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
 .step-label.active{color:var(--gold);font-weight:600;}
 .step-label.done{color:rgba(255,255,255,0.8);}
 
-/* ── FORM CONTAINER ── */
-.form-container{max-width:780px;margin:0 auto;padding:32px 20px 80px;}
+/* -- FORM CONTAINER -- */
+.form-container{max-width:780px;margin:0 auto;padding:32px 20px 80px;position:relative;z-index:1;}
 .step-panel{display:none;animation:fadeUp 0.35s ease;}
 .step-panel.active{display:block;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 #step-success{display:none;}
 #step-success.active{display:block;}
 
-/* ── SECTION TITLES ── */
+/* -- SECTION TITLES -- */
 .sec-title{font-family:"Playfair Display",serif;font-size:22px;font-weight:700;color:var(--green);margin-bottom:6px;margin-top:8px;}
 .sec-sub{font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.5;}
 
-/* ── BOXES ── */
+/* -- BOXES -- */
 .box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;box-shadow:var(--shadow);}
 .box h3{font-family:"Playfair Display",serif;font-size:16px;font-weight:600;color:var(--green);margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--border);}
 .notice{background:rgba(23,90,79,0.06);border-left:3px solid var(--green);border-radius:6px;padding:12px 14px;font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.5;}
 
-/* ── ACCOUNT CARDS ── */
+/* -- ACCOUNT CARDS -- */
 .account-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:14px;margin-bottom:28px;}
 .account-card{
   border:1.5px solid var(--border);border-radius:14px;
   padding:22px 14px 18px;cursor:pointer;
   background:var(--surface);text-align:center;
   box-shadow:var(--shadow);transition:all 0.22s;
-  user-select:none;
+  user-select:none;position:relative;z-index:1;
 }
 .account-card:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 8px 24px rgba(182,152,90,0.18);}
 .account-card.selected{border-color:var(--gold);background:rgba(182,152,90,0.06);box-shadow:0 6px 22px rgba(182,152,90,0.22);}
@@ -70,7 +70,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
 .account-card .ac-desc{font-size:11px;color:var(--muted);line-height:1.4;pointer-events:none;}
 .account-card.selected .ac-title{color:var(--gold-dark);}
 
-/* ── FORM FIELDS ── */
+/* -- FORM FIELDS -- */
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
 .span2{grid-column:span 2;}
@@ -81,7 +81,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
 .fg input.invalid,.fg select.invalid,.fg textarea.invalid{border-color:var(--critical);background:rgba(184,50,50,0.04);}
 .req{color:var(--critical);}
 
-/* ── RADIO / CHECKBOX PILLS ── */
+/* -- RADIO / CHECKBOX PILLS -- */
 .radio-group,.check-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
 .radio-opt,.check-opt{
   display:inline-flex;align-items:center;gap:7px;
@@ -94,28 +94,16 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
 .radio-opt:has(input:checked),.check-opt:has(input:checked){border-color:var(--gold);background:var(--gold-light);color:var(--gold-dark);font-weight:600;}
 .radio-opt input,.check-opt input{width:14px;height:14px;accent-color:var(--gold);pointer-events:none;}
 
-/* ── LBC questions ── */
+/* -- LBC questions -- */
 .lbc-question{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--border);margin-bottom:4px;}
 .lbc-question:last-of-type{border-bottom:none;}
 .lbc-question-text{font-size:13px;color:var(--text);flex:1;}
 .lbc-choices{display:flex;gap:8px;flex-shrink:0;}
 
-/* ── PORTFOLIO CARDS ── */
-.portfolio-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:10px;}
-.portfolio-card{position:relative;border:1.5px solid var(--border);border-radius:12px;padding:14px 12px;cursor:pointer;transition:all 0.22s;background:var(--surface);}
-.portfolio-card input[type=radio]{position:absolute;opacity:0;width:0;height:0;}
-.portfolio-card:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 8px 20px rgba(182,152,90,0.18);}
-.portfolio-card:has(input:checked){border-color:var(--gold);background:rgba(182,152,90,0.06);box-shadow:0 6px 18px rgba(182,152,90,0.22);}
-.pf-name{font-size:12px;font-weight:700;color:var(--green);margin-bottom:6px;}
-.pf-bar-wrap{height:4px;border-radius:2px;background:#e8e4db;margin-bottom:8px;overflow:hidden;}
-.pf-bar{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--green),var(--gold));}
-.pf-gain{font-size:11px;font-weight:600;color:var(--green);}
-.pf-loss{font-size:11px;color:var(--critical);}
-.pf-perf{display:flex;justify-content:space-between;margin-bottom:4px;}
-.pf-check{display:none;position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;background:var(--gold);color:#fff;font-size:10px;align-items:center;justify-content:center;}
-.portfolio-card:has(input:checked) .pf-check{display:flex;}
+/* -- PORTFOLIO CARDS -- */
 
-/* ── SIGNATURE ── */
+
+/* -- SIGNATURE -- */
 .sig-wrap{border:1.5px solid var(--border);border-radius:12px;overflow:hidden;background:#fff;}
 #sig-canvas{display:block;width:100%;cursor:crosshair;}
 .sig-hint{text-align:center;font-size:11px;color:var(--muted);padding:6px;background:#fafaf7;border-top:1px solid var(--border);}
@@ -123,7 +111,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
 .sig-clear{background:none;border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:11px;cursor:pointer;color:var(--muted);}
 .sig-clear:hover{border-color:var(--critical);color:var(--critical);}
 
-/* ── SUMMARY ── */
+/* -- SUMMARY -- */
 .sum-sec{padding:16px 20px;border-bottom:1px solid var(--border);}
 .sum-sec:last-child{border-bottom:none;}
 .sum-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gold);margin-bottom:10px;}
@@ -132,12 +120,12 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
 .sum-row span{color:var(--muted);}
 .sum-row strong{color:var(--text);text-align:right;max-width:60%;}
 
-/* ── LEGAL CHECKBOXES ── */
+/* -- LEGAL CHECKBOXES -- */
 .legal-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:20px;font-size:12px;color:var(--muted);line-height:1.6;}
 .legal-check{display:flex;align-items:flex-start;gap:10px;margin-top:12px;}
 .legal-check input[type=checkbox]{width:16px;height:16px;accent-color:var(--green);flex-shrink:0;margin-top:2px;cursor:pointer;}
 
-/* ── BUTTONS ── */
+/* -- BUTTONS -- */
 .btn-row{display:flex;gap:12px;justify-content:flex-end;margin-top:24px;}
 .btn{padding:12px 28px;border-radius:10px;font-size:14px;font-weight:600;font-family:"DM Sans",sans-serif;cursor:pointer;border:none;transition:all 0.2s;}
 .btn-primary{background:linear-gradient(135deg,var(--green),var(--green-light));color:#fff;box-shadow:0 4px 16px rgba(23,90,79,0.3);}
@@ -147,7 +135,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
 .btn-green{background:linear-gradient(135deg,#175a4f,#1e7363);color:#fff;box-shadow:0 4px 16px rgba(23,90,79,0.3);}
 .btn-green:hover{transform:translateY(-1px);}
 
-/* ── SUCCESS PAGE ── */
+/* -- SUCCESS PAGE -- */
 .success-icon{font-size:64px;text-align:center;margin-bottom:16px;}
 .success-title{font-family:"Playfair Display",serif;font-size:26px;font-weight:700;color:var(--green);text-align:center;margin-bottom:8px;}
 .success-sub{text-align:center;color:var(--muted);font-size:14px;max-width:500px;margin:0 auto 16px;}
@@ -167,17 +155,17 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
 .btn-convention-unlocked:hover{background:var(--green-light);}
 .locked-hint{font-size:11px;color:var(--muted);margin-top:8px;}
 
-/* ── TOAST ── */
+/* -- TOAST -- */
 .toast{position:fixed;bottom:24px;right:24px;z-index:999;background:#fff;border:1px solid var(--border);box-shadow:0 8px 32px rgba(0,0,0,0.15);border-radius:10px;padding:12px 20px;font-size:13px;font-weight:500;transform:translateY(20px);opacity:0;transition:all 0.3s;pointer-events:none;max-width:360px;}
 .toast.show{transform:translateY(0);opacity:1;}
 .toast.error{border-left:4px solid var(--critical);color:var(--critical);}
 .toast.info{border-left:4px solid var(--green);color:var(--green);}
 
-/* ── FOOTER ── */
+/* -- FOOTER -- */
 .site-footer{background:var(--green);color:rgba(255,255,255,0.7);text-align:center;padding:20px 24px;font-size:11px;line-height:1.8;}
 .site-footer .footer-logo{font-family:"Playfair Display",serif;font-size:20px;font-weight:700;color:#b6985a;margin-bottom:6px;}
 
-/* ── RESPONSIVE ── */
+/* -- RESPONSIVE -- */
 @media(max-width:640px){
   .grid2,.grid3{grid-template-columns:1fr;}
   .span2{grid-column:span 1;}
@@ -197,7 +185,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
 .pf-checkbox-wrap { display:flex; align-items:center; gap:4px; margin-top:8px; }
 
 
-/* ── PORTEFEUILLE SVG ── */
+/* -- PORTEFEUILLE SVG -- */
 .pf-wrap { width:100%; overflow-x:auto; }
 .pf-wrap svg { display:block; margin:0 auto; }
 .pf-check-row { display:flex; justify-content:space-around; max-width:500px; margin:6px auto 0; }
@@ -235,7 +223,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
 
 <div class="form-container">
 
-<!-- ═══ ÉTAPE 1 : TYPE DE COMPTE ═══ -->
+<!-- === ÉTAPE 1 : TYPE DE COMPTE === -->
 <div class="step-panel active" id="step-1">
   <div class="sec-title">Type de compte souhaité</div>
   <div class="sec-sub">Sélectionnez le type de compte que vous désirez ouvrir chez ABCO BOURSE.</div>
@@ -265,7 +253,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
   <div class="btn-row"><button class="btn btn-primary" id="btn-step1-next">Continuer →</button></div>
 </div>
 
-<!-- ═══ ÉTAPE 2 : IDENTITÉ ═══ -->
+<!-- === ÉTAPE 2 : IDENTITÉ === -->
 <div class="step-panel" id="step-2">
   <div class="sec-title">Informations sur le titulaire</div>
   <div class="sec-sub">Renseignez vos informations personnelles telles qu'elles figurent sur votre pièce d'identité.</div>
@@ -416,7 +404,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
   </div>
 </div>
 
-<!-- ═══ ÉTAPE 3 : PROFIL INVESTISSEUR & LBC/FT ═══ -->
+<!-- === ÉTAPE 3 : PROFIL INVESTISSEUR & LBC/FT === -->
 <div class="step-panel" id="step-3">
   <div class="sec-title">Profil d'investissement &amp; Conformité</div>
   <div class="sec-sub">Ces informations nous permettent de vous proposer des placements adaptés et de respecter nos obligations réglementaires.</div>
@@ -694,7 +682,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
   </div>
 </div>
 
-<!-- ═══ ÉTAPE 5 : CONFIRMATION ═══ -->
+<!-- === ÉTAPE 5 : CONFIRMATION === -->
 <div class="step-panel" id="step-5">
   <div class="sec-title">Vérification & Soumission</div>
   <div class="sec-sub">Vérifiez vos informations avant de soumettre. Notre équipe vous contactera sous 48 heures ouvrables.</div>
@@ -717,7 +705,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
   </div>
 </div>
 
-<!-- ═══ SUCCÈS ═══ -->
+<!-- === SUCCÈS === -->
 <div id="step-success">
   <div class="success-icon">✅</div>
   <div class="success-title">Demande envoyée avec succès !</div>
@@ -759,9 +747,9 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
 </div>
 
 <script>
-// ══════════════════════════════════════════════
+// ==============================================
 // FIRESTORE REST API
-// ══════════════════════════════════════════════
+// ==============================================
 const FIREBASE_API_KEY = "AIzaSyBP2viPdyOZr--CJtmv1R5anR9KRBW-m1A";
 const FIRESTORE_PROJECT = "abco-digital-onboarding-21f8d";
 const FIRESTORE_BASE = `https://firestore.googleapis.com/v1/projects/${FIRESTORE_PROJECT}/databases/(default)/documents`;
@@ -794,18 +782,18 @@ async function firestoreAdd(collection, data) {
   return { id: json.name.split("/").pop() };
 }
 
-// ══════════════════════════════════════════════
+// ==============================================
 // STATE
-// ══════════════════════════════════════════════
+// ==============================================
 let currentStep = 1;
 const totalSteps = 5;
 let accountType = "";
 let signatureData = "";
 let smileIDDone = false;
 
-// ══════════════════════════════════════════════
+// ==============================================
 // HELPERS
-// ══════════════════════════════════════════════
+// ==============================================
 const g   = id   => document.getElementById(id)?.value || "";
 const gc  = name => { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : ""; };
 const gcm = name => Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(e => e.value).join(", ");
@@ -826,9 +814,9 @@ function isVisible(el) {
   return true;
 }
 
-// ══════════════════════════════════════════════
+// ==============================================
 // PROGRESS
-// ══════════════════════════════════════════════
+// ==============================================
 function updateProgress() {
   document.querySelectorAll(".step-dot").forEach((dot, i) => {
     dot.classList.toggle("active", i+1 === currentStep);
@@ -841,9 +829,9 @@ function updateProgress() {
   document.getElementById("progress-fill").style.width = ((currentStep-1)/(totalSteps-1)*100) + "%";
 }
 
-// ══════════════════════════════════════════════
+// ==============================================
 // NAVIGATION
-// ══════════════════════════════════════════════
+// ==============================================
 function goNext() {
   if (!validateStep(currentStep)) return;
   document.getElementById("step-" + currentStep).classList.remove("active");
@@ -863,9 +851,9 @@ function goPrev() {
   window.scrollTo({top: 0, behavior: "smooth"});
 }
 
-// ══════════════════════════════════════════════
+// ==============================================
 // VALIDATION
-// ══════════════════════════════════════════════
+// ==============================================
 function validateStep(step) {
   let ok = true;
 
@@ -889,7 +877,7 @@ function validateStep(step) {
     if (!el.value.trim()) { el.classList.add("invalid"); ok = false; }
   });
 
-  // Radios obligatoires par étape
+  // Radios obligatoires par etape
   const requiredRadios = {
     2: ["civilite", "id-type", "residence-type"],
     3: ["revenu", "montant-invest", "objectif", "horizon", "risque", "portefeuille",
@@ -913,9 +901,9 @@ function validateStep(step) {
   return ok;
 }
 
-// ══════════════════════════════════════════════
-// TOGGLE DATE FIELDS (pièce identité)
-// ══════════════════════════════════════════════
+// ==============================================
+// TOGGLE DATE FIELDS (piece identite)
+// ==============================================
 function toggleDateFields(idType) {
   const showDates = idType !== "Extrait de naissance";
   ["wrap-id-delivrance", "wrap-id-expiration"].forEach(id => {
@@ -928,9 +916,9 @@ function toggleDateFields(idType) {
   });
 }
 
-// ══════════════════════════════════════════════
+// ==============================================
 // SIGNATURE
-// ══════════════════════════════════════════════
+// ==============================================
 function initSignature() {
   const canvas = document.getElementById("sig-canvas");
   if (!canvas || canvas._init) return;
@@ -962,9 +950,9 @@ function clearSignature() {
   signatureData = "";
 }
 
-// ══════════════════════════════════════════════
-// RÉSUMÉ (étape 5)
-// ══════════════════════════════════════════════
+// ==============================================
+// RESUME (etape 5)
+// ==============================================
 function buildSummary() {
   const typeLabels = {
     "individuel-libre":"Compte Titres Individuel – Gestion Libre",
@@ -1004,9 +992,9 @@ function buildSummary() {
     </div>`;
 }
 
-// ══════════════════════════════════════════════
+// ==============================================
 // SOUMISSION FIRESTORE
-// ══════════════════════════════════════════════
+// ==============================================
 async function submitForm() {
   if (!document.getElementById("accept-terms").checked) { showToast("Veuillez accepter les conditions générales", "error"); return; }
   if (!document.getElementById("accept-data").checked)  { showToast("Veuillez accepter la collecte des données", "error"); return; }
@@ -1074,9 +1062,9 @@ async function submitForm() {
   }
 }
 
-// ══════════════════════════════════════════════
-// SMILEID → DÉBLOCAGE CONVENTION
-// ══════════════════════════════════════════════
+// ==============================================
+// SMILEID > DEBLOCAGE CONVENTION
+// ==============================================
 function onSmileIDClick() {
   setTimeout(() => {
     smileIDDone = true;
@@ -1105,19 +1093,19 @@ function checkConventionAccess(e) {
   return true;
 }
 
-// ══════════════════════════════════════════════
+// ==============================================
 // INIT AU CHARGEMENT DE LA PAGE
-// ══════════════════════════════════════════════
+// ==============================================
 document.addEventListener("DOMContentLoaded", function() {
 
-  // ── Sélection des cartes de compte (event delegation) ──
+  // -- Selection des cartes de compte (event delegation) --
   const grid = document.getElementById("account-cards-grid");
   grid.addEventListener("click", function(e) {
     const card = e.target.closest(".account-card");
     if (!card) return;
     const type = card.getAttribute("data-type");
     if (!type) return;
-    // Sélectionner
+    // Selectionner
     grid.querySelectorAll(".account-card").forEach(c => c.classList.remove("selected"));
     card.classList.add("selected");
     accountType = type;
@@ -1135,7 +1123,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
 
-  // ── Boutons de navigation ──
+  // -- Boutons de navigation --
   document.getElementById("btn-step1-next").addEventListener("click", goNext);
   document.getElementById("btn-step2-prev").addEventListener("click", goPrev);
   document.getElementById("btn-step2-next").addEventListener("click", goNext);
@@ -1149,48 +1137,25 @@ document.addEventListener("DOMContentLoaded", function() {
   document.getElementById("btn-smileid").addEventListener("click", onSmileIDClick);
   document.getElementById("btn-convention").addEventListener("click", checkConventionAccess);
 
-  // ── Select questions secrètes → hidden inputs ──
+  // -- Select questions secretes > hidden inputs --
   document.getElementById("question1-sel").addEventListener("change", e => { document.getElementById("question1-hidden").value = e.target.value; });
   document.getElementById("question2-sel").addEventListener("change", e => { document.getElementById("question2-hidden").value = e.target.value; });
 
-  // ── Init signature quand étape 4 devient active ──
+  // -- Init signature quand etape 4 devient active --
   new MutationObserver(() => {
     if (document.getElementById("step-4").classList.contains("active")) setTimeout(initSignature, 100);
   }).observe(document.getElementById("step-4"), {attributes:true, attributeFilter:["class"]});
 
-  // ── Pièce d'identité → toggle dates ──
+  // -- Piece d'identite > toggle dates --
   document.querySelectorAll("input[name='id-type']").forEach(r => {
     r.addEventListener("change", () => toggleDateFields(r.value));
   });
 
-  // ── Init progress ──
+  // -- Init progress --
   updateProgress();
 });
 
-  const selIds = {
-    'Défensif': 'sel-r1', 'Équilibré': 'sel-r2',
-    'Dynamique': 'sel-r3', 'Offensif': 'sel-r4'
-  };
-  // Décocher tous
-  ['pf-defensif','pf-equilibre','pf-dynamique','pf-offensif'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.checked = false;
-  });
-  // Retirer tous les contours
-  ['sel-r1','sel-r2','sel-r3','sel-r4'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.setAttribute('stroke','transparent');
-  });
-  // Cocher le bon
-  const radio = document.getElementById(ids[val]);
-  if (radio) radio.checked = true;
-  // Mettre le contour doré
-  const sel = document.getElementById(selIds[val]);
-  if (sel) sel.setAttribute('stroke','#b6985a');
-};
-
-
-// ── Sélection portefeuille ──
+// -- Selection portefeuille --
 window.pfSelect = function(val) {
   const map = {
     'Défensif':  {radio:'pf-def',  sel:'sel-def', lbl:'lbl-def'},
