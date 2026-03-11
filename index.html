@@ -418,7 +418,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
 
 <!-- ═══ ÉTAPE 3 : PROFIL INVESTISSEUR & LBC/FT ═══ -->
 <div class="step-panel" id="step-3">
-  <div class="sec-title">Profil d'investissement & Conformité</div>
+  <div class="sec-title">Profil d'investissement &amp; Conformité</div>
   <div class="sec-sub">Ces informations nous permettent de vous proposer des placements adaptés et de respecter nos obligations réglementaires.</div>
 
   <div class="box">
@@ -515,13 +515,20 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
     </div>
     <div class="fg"><label>Mode de communication préféré (plusieurs choix)</label>
       <div class="check-group">
-        <la  <div class="box">
+        <label class="check-opt"><input type="checkbox" name="communication" value="Email"> Email</label>
+        <label class="check-opt"><input type="checkbox" name="communication" value="SMS"> SMS</label>
+        <label class="check-opt"><input type="checkbox" name="communication" value="Courrier postal"> Courrier postal</label>
+        <label class="check-opt"><input type="checkbox" name="communication" value="Téléphone"> Téléphone</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="box">
     <h3>📊 Profil de portefeuille <span class="req">*</span></h3>
     <p style="font-size:13px;color:var(--muted);margin-bottom:6px;">Le tableau suivant montre le meilleur et le pire rendement potentiel de quatre portefeuilles fictifs de <strong>1 000 000 FCFA</strong> après une année. Dans quel portefeuille vous sentiriez-vous le plus à l'aise d'investir ?</p>
     <p style="font-size:12px;color:var(--muted);margin-bottom:16px;font-style:italic;">Cliquez sur le portefeuille correspondant à votre réponse.</p>
-
     <div class="pf-wrap">
-      <svg viewBox="0 0 600 360" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;">
+<svg viewBox="0 0 600 360" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;">
 
         <!-- Ligne de base noire épaisse à y=200 -->
         <line x1="20" y1="200" x2="530" y2="200" stroke="#111" stroke-width="2"/>
@@ -574,29 +581,11 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
 
       </svg>
     </div>
-
-    <!-- Cases à cocher -->
     <div class="pf-check-row">
-      <label class="pf-check-item" id="lbl-def">
-        <input type="radio" name="portefeuille" value="Défensif" id="pf-def" required onchange="pfSelect('Défensif')">
-      </label>
-      <label class="pf-check-item" id="lbl-eq">
-        <input type="radio" name="portefeuille" value="Équilibré" id="pf-eq" onchange="pfSelect('Équilibré')">
-      </label>
-      <label class="pf-check-item" id="lbl-dyn">
-        <input type="radio" name="portefeuille" value="Dynamique" id="pf-dyn" onchange="pfSelect('Dynamique')">
-      </label>
-      <label class="pf-check-item" id="lbl-off">
-        <input type="radio" name="portefeuille" value="Offensif" id="pf-off" onchange="pfSelect('Offensif')">
-      </label>
-    </div>
-  </div>
-
-bel class="check-opt"><input type="checkbox" name="communication" value="Email"> Email</label>
-        <label class="check-opt"><input type="checkbox" name="communication" value="SMS"> SMS</label>
-        <label class="check-opt"><input type="checkbox" name="communication" value="Courrier postal"> Courrier postal</label>
-        <label class="check-opt"><input type="checkbox" name="communication" value="Téléphone"> Téléphone</label>
-      </div>
+      <label class="pf-check-item" id="lbl-def"><input type="radio" name="portefeuille" value="Défensif" id="pf-def" required onchange="pfSelect('Défensif')"></label>
+      <label class="pf-check-item" id="lbl-eq"><input type="radio" name="portefeuille" value="Équilibré" id="pf-eq" onchange="pfSelect('Équilibré')"></label>
+      <label class="pf-check-item" id="lbl-dyn"><input type="radio" name="portefeuille" value="Dynamique" id="pf-dyn" onchange="pfSelect('Dynamique')"></label>
+      <label class="pf-check-item" id="lbl-off"><input type="radio" name="portefeuille" value="Offensif" id="pf-off" onchange="pfSelect('Offensif')"></label>
     </div>
   </div>
 
@@ -684,7 +673,6 @@ bel class="check-opt"><input type="checkbox" name="communication" value="Email">
   </div>
 </div>
 
-<!-- ═══ ÉTAPE 4 : SIGNATURE ═══ -->
 <div class="step-panel" id="step-4">
   <div class="sec-title">Signature électronique</div>
   <div class="sec-sub">Signez dans le cadre ci-dessous avec votre souris ou votre doigt.</div>
