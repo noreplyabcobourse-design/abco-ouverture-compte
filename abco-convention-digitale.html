@@ -269,6 +269,15 @@ body {
     width: 100%; min-height: auto;
   }
 }
+
+@media print {
+  body { background: #fff !important; }
+  .pages-wrap { padding: 0 !important; gap: 0 !important; background: #fff !important; }
+  .action-bar { display: none !important; }
+  .approval-box { display: none !important; }
+  .page { box-shadow: none !important; }
+}
+
 </style>
 </head>
 <body>
@@ -1003,6 +1012,39 @@ async function telechargerPDF() {
   approvalSection.style.display = 'none';
   actionBar.style.display       = 'none';
 
+  // Supprimer le padding/gap du pages-wrap pour éviter les pages blanches
+  var pagesWrap = document.querySelector('.pages-wrap');
+  var oldPadding = pagesWrap.style.padding;
+  var oldGap     = pagesWrap.style.gap;
+  pagesWrap.style.padding = '0';
+  pagesWrap.style.gap     = '0';
+  document.body.style.background = '#fff';
+
+  // Convertir tous les inputs éditables en spans pour le PDF
+  var inputsData = [];
+  document.querySelectorAll('input.field-editable').forEach(function(inp) {
+    var val = inp.value || '';
+    var span = document.createElement('span');
+    span.className = 'field-editable field-pdf-val';
+    span.textContent = val || ' ';
+    span.style.borderBottom = val ? '1px solid #000' : '1px solid #999';
+    span.style.minWidth = inp.style.minWidth || '120px';
+    span.style.display = 'inline-block';
+    span.style.fontStyle = val ? 'normal' : 'italic';
+    span.style.color = val ? '#000' : '#999';
+    inp.parentNode.replaceChild(span, inp);
+    inputsData.push({ span: span, inp: inp });
+  });
+
+  // Convertir les box-check en carrés visuels pour le PDF
+  document.querySelectorAll('.box-check').forEach(function(box) {
+    box.style.display = 'inline-block';
+    box.style.width = '10px';
+    box.style.height = '10px';
+    box.style.border = '1.5px solid #000';
+    box.style.verticalAlign = 'middle';
+  });
+
   // Nom du fichier
   var nomInput = document.getElementById('t-nom');
   var prenomInput = document.getElementById('t-prenom');
@@ -1030,6 +1072,14 @@ async function telechargerPDF() {
     actionBar.style.display       = 'flex';
     document.getElementById('btn-dl').disabled  = false;
     document.getElementById('btn-dl2').disabled = false;
+    // Restaurer pages-wrap
+    pagesWrap.style.padding = oldPadding;
+    pagesWrap.style.gap     = oldGap;
+    document.body.style.background = '';
+    // Restaurer les inputs
+    inputsData.forEach(function(item) {
+      item.span.parentNode.replaceChild(item.inp, item.span);
+    });
   }
 }
 
