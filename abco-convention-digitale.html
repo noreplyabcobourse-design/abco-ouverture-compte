@@ -207,21 +207,43 @@ input.appro-nom{
 @media print {
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   @page { margin: 10mm 12mm; size: A4; }
-  #topbar, #approbation, #toast, .sig-eff { display: none !important; }
+
+  /* Masquer TOUT sauf #conv */
+  body > * { display: none !important; }
+  #scroll-area { display: block !important; }
+  #scroll-area > * { display: none !important; }
+  #conv { display: block !important; }
+
+  /* Masquer l'overlay et la barre */
+  #topbar, #approbation, #toast, .sig-eff, #print-overlay { display: none !important; }
+
+  /* Body propre */
   body { background: #fff !important; padding: 0 !important; margin: 0 !important; }
-  #scroll-area { display: block !important; padding: 0 !important; background: #fff !important; }
+  #scroll-area { padding: 0 !important; background: #fff !important; }
+
+  /* Convention pleine largeur */
   #conv {
     width: 100% !important; max-width: 100% !important;
     margin: 0 !important; padding: 0 !important;
     box-shadow: none !important; background: #fff !important;
   }
+
+  /* Inputs */
   input.f { border: none !important; border-bottom: 1px solid #000 !important; background: transparent !important; }
+
+  /* Cases à cocher */
   .bx { border: 1.5px solid #000 !important; }
   .bx.on { background: #000 !important; color: #fff !important; }
+
+  /* Tableaux */
   .t-dom th, .t-tar th { background: #175a4f !important; color: #fff !important; }
   .t-tar tr.cat td { background: #e5eeeb !important; color: #175a4f !important; }
+
+  /* Couleurs */
   .sec { color: #175a4f !important; }
   .hdr { border-bottom: 2.5px solid #175a4f !important; }
+
+  /* Éviter coupures */
   .boite, .t-dom, .sig-grille, .sec { page-break-inside: avoid; break-inside: avoid; }
 }
 </style>
