@@ -647,9 +647,9 @@ function telecharger() {
     toast('Veuillez cocher \u00ab\u00a0Lu et approuv\u00e9\u00a0\u00bb'); return;
   }
 
-  /* 1. Injecter la signature canvas comme image fixe */
+  /* 1. Signature canvas → image */
   var canvas = document.getElementById('sig-canvas');
-  var vide   = document.createElement('canvas');
+  var vide = document.createElement('canvas');
   vide.width = canvas.width; vide.height = canvas.height;
   var zone = document.getElementById('sig-zone');
   if (canvas.toDataURL() !== vide.toDataURL()) {
@@ -660,63 +660,63 @@ function telecharger() {
     zone.appendChild(img);
   }
 
-  /* 2. Nom du fichier */
+  /* 2. Nom fichier */
   var nom    = (document.getElementById('c-nom').value    || 'NOM').toUpperCase().replace(/\s+/g,'_');
   var prenom = (document.getElementById('c-prenom').value || 'PRENOM').replace(/\s+/g,'_');
   var nomFichier = 'ABCO_Convention_' + nom + '_' + prenom + '.pdf';
 
-  /* 3. Cloner #conv dans un wrapper HTML propre (sans body gris, sans topbar) */
-  var convEl   = document.getElementById('conv');
-  var convHTML = convEl.outerHTML;
+  /* 3. Masquer tout sauf #conv */
+  var topbar  = document.getElementById('topbar');
+  var appro   = document.getElementById('approbation');
+  var scrollA = document.getElementById('scroll-area');
+  topbar.style.display  = 'none';
+  appro.style.display   = 'none';
 
-  /* Récupérer tout le CSS de la page */
-  var styles = '';
-  Array.from(document.styleSheets).forEach(function(ss) {
-    try {
-      Array.from(ss.cssRules).forEach(function(r) { styles += r.cssText + '\n'; });
-    } catch(e) {}
-  });
+  /* 4. Forcer #conv en position fixe top-left, largeur exacte 794px */
+  var conv = document.getElementById('conv');
+  var prevStyle = conv.getAttribute('style') || '';
+  conv.style.cssText = [
+    'position:fixed',
+    'top:0',
+    'left:0',
+    'width:794px',
+    'margin:0',
+    'padding:16mm 18mm 20mm',
+    'box-shadow:none',
+    'background:#fff',
+    'z-index:9999'
+  ].join('!important;') + '!important';
 
-  var fullHTML = '<!DOCTYPE html><html><head><meta charset="UTF-8">'
-    + '<style>'
-    + 'html,body{margin:0;padding:0;background:#fff;}'
-    + styles
-    + '#conv{margin:0!important;box-shadow:none!important;width:210mm!important;}'
-    + '</style></head><body>'
-    + convHTML
-    + '</body></html>';
+  /* 5. Forcer body background blanc */
+  var prevBodyBg = document.body.style.background;
+  document.body.style.background = '#fff';
 
-  /* 4. Créer un iframe caché, y injecter le HTML, puis capturer */
-  var iframe = document.createElement('iframe');
-  iframe.style.cssText = 'position:fixed;top:0;left:0;width:794px;height:1px;opacity:0;pointer-events:none;border:none;';
-  document.body.appendChild(iframe);
-
-  iframe.onload = function() {
-    var el = iframe.contentDocument.getElementById('conv');
-    if (!el) { document.body.removeChild(iframe); return; }
-
-    var opt = {
-      margin:      [8, 8, 8, 8],
-      filename:    nomFichier,
-      image:       { type:'jpeg', quality:0.95 },
-      html2canvas: {
-        scale:       2,
-        useCORS:     true,
-        windowWidth: 794,
-        scrollX:     0,
-        scrollY:     0
-      },
-      jsPDF: { unit:'mm', format:'a4', orientation:'portrait' },
-      pagebreak: { mode:'avoid-all' }
-    };
-
-    html2pdf().set(opt).from(el).save().then(function() {
-      document.body.removeChild(iframe);
-    });
+  /* 6. html2pdf */
+  var opt = {
+    margin:      0,
+    filename:    nomFichier,
+    image:       { type: 'jpeg', quality: 0.95 },
+    html2canvas: {
+      scale:       2,
+      useCORS:     true,
+      windowWidth: 794,
+      windowHeight: conv.scrollHeight,
+      x: 0,
+      y: 0,
+      scrollX: 0,
+      scrollY: 0
+    },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    pagebreak: { mode: 'avoid-all' }
   };
 
-  var iDoc = iframe.contentDocument || iframe.contentWindow.document;
-  iDoc.open(); iDoc.write(fullHTML); iDoc.close();
+  html2pdf().set(opt).from(conv).save().then(function() {
+    /* 7. Restaurer */
+    conv.setAttribute('style', prevStyle);
+    document.body.style.background = prevBodyBg;
+    topbar.style.display  = '';
+    appro.style.display   = '';
+  });
 }
 
 /* ── Toast ── */
