@@ -206,7 +206,8 @@ input.appro-nom{
 ═══════════════════════════════════════ */
 @media print {
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  @page { margin: 10mm 12mm; size: A4; }
+  @page { margin: 14mm 12mm 10mm; size: A4; }
+  a { text-decoration: none !important; color: inherit !important; }
 
   /* Masquer TOUT sauf #conv */
   body > * { display: none !important; }
@@ -229,7 +230,7 @@ input.appro-nom{
   }
 
   /* Inputs */
-  input.f { border: none !important; border-bottom: 1px solid #000 !important; background: transparent !important; }
+  input.f { border: none !important; border-bottom: none !important; background: transparent !important; }
 
   /* Cases à cocher */
   .bx { border: 1.5px solid #000 !important; }
@@ -250,6 +251,11 @@ input.appro-nom{
   /* Éviter coupures */
   .boite, .t-dom, .sig-grille, .sec { page-break-inside: avoid; break-inside: avoid; }
 }
+
+/* Masquer URL navigateur à l'impression */
+@media print {
+  html { margin: 0 !important; }
+}
 </style>
 </head>
 <body>
@@ -260,7 +266,7 @@ input.appro-nom{
     <div class="titre">Convention d'ouverture de compte-titres — ABCO BOURSE</div>
     <div class="sous">Remplissez tous les champs, signez, puis téléchargez votre exemplaire</div>
   </div>
-  <div class="hint" id="hint-msg">Cochez « Lu et approuvé » pour enregistrer votre convention en PDF</div>
+  <div class="hint" id="hint-msg">Cochez « Lu et approuvé » puis dans la fenêtre d'impression : désactivez <b>En-têtes et pieds de page</b></div>
   <button id="btn-dl" onclick="telecharger()">⬇ Enregistrer en PDF</button>
 </div>
 
