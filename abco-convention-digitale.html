@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Convention d'ouverture de compte-titres — ABCO BOURSE</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
 /* ─── RESET ─── */
@@ -267,8 +269,8 @@ input.appro-nom{
     <div class="titre">Convention d'ouverture de compte-titres — ABCO BOURSE</div>
     <div class="sous">Remplissez tous les champs, signez, puis téléchargez votre exemplaire</div>
   </div>
-  <div class="hint" id="hint-msg">Cochez « Lu et approuvé » puis cliquez Imprimer → Enregistrer en PDF</div>
-  <button id="btn-dl" onclick="telecharger()">🖨 Imprimer / Enregistrer PDF</button>
+  <div class="hint" id="hint-msg">Cochez « Lu et approuvé » pour télécharger votre convention signée</div>
+  <button id="btn-dl" onclick="telecharger()">⬇ Télécharger PDF</button>
 </div>
 
 <div id="scroll-area">
@@ -679,25 +681,117 @@ function onAppro() {
   document.getElementById('hint-msg').style.display = ok ? 'none' : '';
 }
 
-/* ── Impression PDF ── */
-function telecharger() {
+/* ── Téléchargement PDF ── */
+async function telecharger() {
   if (!document.getElementById('cb-appro').checked) {
     toast('Veuillez cocher \u00ab\u00a0Lu et approuv\u00e9\u00a0\u00bb'); return;
   }
 
-  /* Signature canvas → image fixe pour l'impression */
-  var canvas = document.getElementById('sig-canvas');
-  var vide   = document.createElement('canvas');
-  vide.width = canvas.width; vide.height = canvas.height;
-  if (canvas.toDataURL() !== vide.toDataURL()) {
+  var btn = document.getElementById('btn-dl');
+  btn.textContent = '⏳ Génération...';
+  btn.classList.remove('on');
+
+  /* 1. Signature canvas → image */
+  var sigCanvas = document.getElementById('sig-canvas');
+  var vide = document.createElement('canvas');
+  vide.width = sigCanvas.width; vide.height = sigCanvas.height;
+  var zone = document.getElementById('sig-zone');
+  if (sigCanvas.toDataURL() !== vide.toDataURL()) {
     var img = document.createElement('img');
-    img.src = canvas.toDataURL('image/png');
+    img.src = sigCanvas.toDataURL('image/png');
     img.style.cssText = 'width:100%;height:100%;object-fit:contain;display:block;';
-    document.getElementById('sig-zone').innerHTML = '';
-    document.getElementById('sig-zone').appendChild(img);
+    zone.innerHTML = '';
+    zone.appendChild(img);
   }
 
-  window.print();
+  /* 2. Nom fichier */
+  var nom    = (document.getElementById('c-nom').value    || 'NOM').toUpperCase().replace(/\s+/g,'_');
+  var prenom = (document.getElementById('c-prenom').value || 'PRENOM').replace(/\s+/g,'_');
+  var nomFichier = 'ABCO_Convention_' + nom + '_' + prenom + '.pdf';
+
+  /* 3. Créer un conteneur de rendu isolé : div blanche, largeur fixe, hors viewport */
+  var conv   = document.getElementById('conv');
+  var clone  = conv.cloneNode(true);
+
+  var wrapper = document.createElement('div');
+  wrapper.style.cssText = [
+    'position:absolute',
+    'top:0',
+    'left:0',
+    'width:794px',
+    'background:#fff',
+    'z-index:-9999',
+    'visibility:hidden',
+    'pointer-events:none'
+  ].join(';');
+  wrapper.appendChild(clone);
+  document.body.appendChild(wrapper);
+
+  /* Copier les valeurs des inputs du vrai DOM vers le clone */
+  var realInputs  = conv.querySelectorAll('input');
+  var cloneInputs = clone.querySelectorAll('input');
+  realInputs.forEach(function(inp, i) {
+    if (cloneInputs[i]) cloneInputs[i].value = inp.value;
+  });
+
+  /* Masquer le bouton effacer dans le clone */
+  clone.querySelectorAll('.sig-eff').forEach(function(b){ b.style.display='none'; });
+
+  try {
+    /* 4. Capturer avec html2canvas */
+    var canvas = await html2canvas(clone, {
+      scale:       2,
+      useCORS:     true,
+      logging:     false,
+      width:       794,
+      windowWidth: 794,
+      backgroundColor: '#ffffff'
+    });
+
+    /* 5. Construire le PDF page par page */
+    var { jsPDF } = window.jspdf;
+    var pdf       = new jsPDF({ unit:'mm', format:'a4', orientation:'portrait' });
+
+    var pageW   = 210;
+    var pageH   = 297;
+    var marginMm = 8;
+    var printW  = pageW - marginMm * 2;
+    var printH  = pageH - marginMm * 2;
+
+    var imgW    = canvas.width;
+    var imgH    = canvas.height;
+
+    /* Ratio px→mm : 794px = 210mm donc 1px = 210/794 mm */
+    var pxToMm  = pageW / 794;
+    var totalMm = imgH * pxToMm;
+
+    var pxPerPage = Math.floor(printH / pxToMm);
+    var pages     = Math.ceil(imgH / pxPerPage);
+
+    for (var p = 0; p < pages; p++) {
+      if (p > 0) pdf.addPage();
+      var srcY   = p * pxPerPage;
+      var srcH   = Math.min(pxPerPage, imgH - srcY);
+
+      /* Découper le canvas sur la hauteur de cette page */
+      var pageCanvas = document.createElement('canvas');
+      pageCanvas.width  = imgW;
+      pageCanvas.height = srcH;
+      var ctx = pageCanvas.getContext('2d');
+      ctx.drawImage(canvas, 0, srcY, imgW, srcH, 0, 0, imgW, srcH);
+
+      var imgData = pageCanvas.toDataURL('image/jpeg', 0.95);
+      var dispH   = srcH * pxToMm;
+      pdf.addImage(imgData, 'JPEG', marginMm, marginMm, printW, dispH);
+    }
+
+    pdf.save(nomFichier);
+
+  } finally {
+    document.body.removeChild(wrapper);
+    btn.textContent = '⬇ Télécharger PDF';
+    btn.classList.add('on');
+  }
 }
 
 /* ── Toast ── */
