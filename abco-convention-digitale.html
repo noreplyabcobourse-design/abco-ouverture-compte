@@ -4,8 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Convention d'ouverture de compte-titres — ABCO BOURSE</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
 /* ─── RESET ─── */
@@ -207,57 +205,24 @@ input.appro-nom{
    IMPRESSION — ce qui s'imprime / PDF
 ═══════════════════════════════════════ */
 @media print {
-  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-
-  /* Cacher tout sauf la convention */
-  #topbar, #approbation, #toast { display: none !important; }
-
-  /* Le body et le scroll-area deviennent transparents */
-  body { background: #fff !important; margin: 0 !important; padding: 0 !important; }
-  #scroll-area { padding: 0 !important; display: block !important; background: #fff !important; }
-
-  /* #conv occupe toute la largeur imprimée */
+  *,-webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  @page { margin: 10mm 12mm; size: A4; }
+  #topbar, #approbation, #toast, .sig-eff { display: none !important; }
+  body { background: #fff !important; padding: 0 !important; margin: 0 !important; }
+  #scroll-area { display: block !important; padding: 0 !important; background: #fff !important; }
   #conv {
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 12mm 14mm 16mm !important;
-    box-shadow: none !important;
-    background: #fff !important;
+    width: 100% !important; max-width: 100% !important;
+    margin: 0 !important; padding: 0 !important;
+    box-shadow: none !important; background: #fff !important;
   }
-
-  /* Inputs : afficher la valeur proprement */
-  input.f {
-    border: none !important;
-    border-bottom: 1px solid #000 !important;
-    background: transparent !important;
-    -webkit-appearance: none !important;
-  }
-
-  /* Cases à cocher */
+  input.f { border: none !important; border-bottom: 1px solid #000 !important; background: transparent !important; }
   .bx { border: 1.5px solid #000 !important; }
   .bx.on { background: #000 !important; color: #fff !important; }
-
-  /* Tableaux */
-  .t-dom th, .t-tar th {
-    background: #175a4f !important;
-    color: #fff !important;
-  }
-  .t-tar tr.cat td { background: #e5eeeb !important; }
-
-  /* Titres de section */
+  .t-dom th, .t-tar th { background: #175a4f !important; color: #fff !important; }
+  .t-tar tr.cat td { background: #e5eeeb !important; color: #175a4f !important; }
   .sec { color: #175a4f !important; }
-
-  /* Header */
   .hdr { border-bottom: 2.5px solid #175a4f !important; }
-
-  /* Bouton effacer signature */
-  .sig-eff { display: none !important; }
-
-  /* Sauts de page : éviter de couper les éléments importants */
-  .sec, .art, .sig-grille, .boite, .t-dom, .t-tar {
-    page-break-inside: avoid;
-    break-inside: avoid;
-  }
+  .boite, .t-dom, .sig-grille, .sec { page-break-inside: avoid; break-inside: avoid; }
 }
 </style>
 </head>
@@ -269,8 +234,8 @@ input.appro-nom{
     <div class="titre">Convention d'ouverture de compte-titres — ABCO BOURSE</div>
     <div class="sous">Remplissez tous les champs, signez, puis téléchargez votre exemplaire</div>
   </div>
-  <div class="hint" id="hint-msg">Cochez « Lu et approuvé » pour télécharger votre convention signée</div>
-  <button id="btn-dl" onclick="telecharger()">⬇ Télécharger PDF</button>
+  <div class="hint" id="hint-msg">Cochez « Lu et approuvé » pour enregistrer votre convention en PDF</div>
+  <button id="btn-dl" onclick="telecharger()">⬇ Enregistrer en PDF</button>
 </div>
 
 <div id="scroll-area">
@@ -681,117 +646,31 @@ function onAppro() {
   document.getElementById('hint-msg').style.display = ok ? 'none' : '';
 }
 
-/* ── Téléchargement PDF ── */
-async function telecharger() {
+/* ── Enregistrement PDF ── */
+function telecharger() {
   if (!document.getElementById('cb-appro').checked) {
-    toast('Veuillez cocher \u00ab\u00a0Lu et approuv\u00e9\u00a0\u00bb'); return;
+    toast('Veuillez cocher « Lu et approuvé »'); return;
   }
 
-  var btn = document.getElementById('btn-dl');
-  btn.textContent = '⏳ Génération...';
-  btn.classList.remove('on');
-
-  /* 1. Signature canvas → image */
+  /* Signature canvas → image fixe */
   var sigCanvas = document.getElementById('sig-canvas');
   var vide = document.createElement('canvas');
   vide.width = sigCanvas.width; vide.height = sigCanvas.height;
-  var zone = document.getElementById('sig-zone');
   if (sigCanvas.toDataURL() !== vide.toDataURL()) {
     var img = document.createElement('img');
     img.src = sigCanvas.toDataURL('image/png');
     img.style.cssText = 'width:100%;height:100%;object-fit:contain;display:block;';
-    zone.innerHTML = '';
-    zone.appendChild(img);
+    document.getElementById('sig-zone').innerHTML = '';
+    document.getElementById('sig-zone').appendChild(img);
   }
 
-  /* 2. Nom fichier */
-  var nom    = (document.getElementById('c-nom').value    || 'NOM').toUpperCase().replace(/\s+/g,'_');
-  var prenom = (document.getElementById('c-prenom').value || 'PRENOM').replace(/\s+/g,'_');
-  var nomFichier = 'ABCO_Convention_' + nom + '_' + prenom + '.pdf';
-
-  /* 3. Créer un conteneur de rendu isolé : div blanche, largeur fixe, hors viewport */
-  var conv   = document.getElementById('conv');
-  var clone  = conv.cloneNode(true);
-
-  var wrapper = document.createElement('div');
-  wrapper.style.cssText = [
-    'position:absolute',
-    'top:0',
-    'left:0',
-    'width:794px',
-    'background:#fff',
-    'z-index:-9999',
-    'visibility:hidden',
-    'pointer-events:none'
-  ].join(';');
-  wrapper.appendChild(clone);
-  document.body.appendChild(wrapper);
-
-  /* Copier les valeurs des inputs du vrai DOM vers le clone */
-  var realInputs  = conv.querySelectorAll('input');
-  var cloneInputs = clone.querySelectorAll('input');
-  realInputs.forEach(function(inp, i) {
-    if (cloneInputs[i]) cloneInputs[i].value = inp.value;
-  });
-
-  /* Masquer le bouton effacer dans le clone */
-  clone.querySelectorAll('.sig-eff').forEach(function(b){ b.style.display='none'; });
-
-  try {
-    /* 4. Capturer avec html2canvas */
-    var canvas = await html2canvas(clone, {
-      scale:       2,
-      useCORS:     true,
-      logging:     false,
-      width:       794,
-      windowWidth: 794,
-      backgroundColor: '#ffffff'
-    });
-
-    /* 5. Construire le PDF page par page */
-    var { jsPDF } = window.jspdf;
-    var pdf       = new jsPDF({ unit:'mm', format:'a4', orientation:'portrait' });
-
-    var pageW   = 210;
-    var pageH   = 297;
-    var marginMm = 8;
-    var printW  = pageW - marginMm * 2;
-    var printH  = pageH - marginMm * 2;
-
-    var imgW    = canvas.width;
-    var imgH    = canvas.height;
-
-    /* Ratio px→mm : 794px = 210mm donc 1px = 210/794 mm */
-    var pxToMm  = pageW / 794;
-    var totalMm = imgH * pxToMm;
-
-    var pxPerPage = Math.floor(printH / pxToMm);
-    var pages     = Math.ceil(imgH / pxPerPage);
-
-    for (var p = 0; p < pages; p++) {
-      if (p > 0) pdf.addPage();
-      var srcY   = p * pxPerPage;
-      var srcH   = Math.min(pxPerPage, imgH - srcY);
-
-      /* Découper le canvas sur la hauteur de cette page */
-      var pageCanvas = document.createElement('canvas');
-      pageCanvas.width  = imgW;
-      pageCanvas.height = srcH;
-      var ctx = pageCanvas.getContext('2d');
-      ctx.drawImage(canvas, 0, srcY, imgW, srcH, 0, 0, imgW, srcH);
-
-      var imgData = pageCanvas.toDataURL('image/jpeg', 0.95);
-      var dispH   = srcH * pxToMm;
-      pdf.addImage(imgData, 'JPEG', marginMm, marginMm, printW, dispH);
-    }
-
-    pdf.save(nomFichier);
-
-  } finally {
-    document.body.removeChild(wrapper);
-    btn.textContent = '⬇ Télécharger PDF';
-    btn.classList.add('on');
-  }
+  /* Afficher le guide puis imprimer */
+  var ov = document.getElementById('print-overlay');
+  ov.style.display = 'flex';
+  setTimeout(function() {
+    window.print();
+    setTimeout(function() { ov.style.display = 'none'; }, 1000);
+  }, 600);
 }
 
 /* ── Toast ── */
@@ -802,5 +681,20 @@ function toast(msg) {
   setTimeout(function(){ t.classList.remove('show'); }, 3000);
 }
 </script>
+
+<!-- OVERLAY GUIDE PDF -->
+<div id="print-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(23,90,79,0.92);
+  display:none;align-items:center;justify-content:center;font-family:Arial,sans-serif;">
+  <div style="background:#fff;border-radius:12px;padding:32px 40px;max-width:400px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.3)">
+    <div style="font-size:48px;margin-bottom:12px">🖨</div>
+    <div style="font-size:17px;font-weight:700;color:#175a4f;margin-bottom:10px">Enregistrer en PDF</div>
+    <div style="font-size:13px;color:#444;line-height:1.7;margin-bottom:20px">
+      Dans la fenêtre qui s'ouvre :<br>
+      <b>Destination</b> → sélectionnez <b>« Enregistrer en PDF »</b><br>
+      puis cliquez <b>« Enregistrer »</b>
+    </div>
+    <div style="font-size:11px;color:#888">Ce message se fermera automatiquement</div>
+  </div>
+</div>
 </body>
 </html>
