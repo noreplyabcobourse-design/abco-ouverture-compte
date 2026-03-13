@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Convention d'ouverture de compte-titres — ABCO BOURSE</title>
 
-<!-- html2pdf -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
 <style>
 /* ─── RESET ─── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -207,17 +204,58 @@ input.appro-nom{
 /* ═══════════════════════════════════════
    IMPRESSION — ce qui s'imprime / PDF
 ═══════════════════════════════════════ */
-@media print{
-  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
-  body{background:#fff!important;padding:0!important}
-  #topbar,#approbation,#toast{display:none!important}
-  #scroll-area{padding:0!important;display:block!important}
-  #conv{width:100%!important;box-shadow:none!important;padding:10mm 14mm 14mm!important;margin:0!important}
-  .bx.on{background:#000!important;color:#fff!important}
-  .t-dom th,.t-tar th{background:#175a4f!important}
-  .sec{color:#175a4f!important}
-  .sig-eff{display:none!important}
-  input.f{border:none!important;border-bottom:1px solid #000!important;background:transparent!important}
+@media print {
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+  /* Cacher tout sauf la convention */
+  #topbar, #approbation, #toast { display: none !important; }
+
+  /* Le body et le scroll-area deviennent transparents */
+  body { background: #fff !important; margin: 0 !important; padding: 0 !important; }
+  #scroll-area { padding: 0 !important; display: block !important; background: #fff !important; }
+
+  /* #conv occupe toute la largeur imprimée */
+  #conv {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 12mm 14mm 16mm !important;
+    box-shadow: none !important;
+    background: #fff !important;
+  }
+
+  /* Inputs : afficher la valeur proprement */
+  input.f {
+    border: none !important;
+    border-bottom: 1px solid #000 !important;
+    background: transparent !important;
+    -webkit-appearance: none !important;
+  }
+
+  /* Cases à cocher */
+  .bx { border: 1.5px solid #000 !important; }
+  .bx.on { background: #000 !important; color: #fff !important; }
+
+  /* Tableaux */
+  .t-dom th, .t-tar th {
+    background: #175a4f !important;
+    color: #fff !important;
+  }
+  .t-tar tr.cat td { background: #e5eeeb !important; }
+
+  /* Titres de section */
+  .sec { color: #175a4f !important; }
+
+  /* Header */
+  .hdr { border-bottom: 2.5px solid #175a4f !important; }
+
+  /* Bouton effacer signature */
+  .sig-eff { display: none !important; }
+
+  /* Sauts de page : éviter de couper les éléments importants */
+  .sec, .art, .sig-grille, .boite, .t-dom, .t-tar {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
 }
 </style>
 </head>
@@ -229,8 +267,8 @@ input.appro-nom{
     <div class="titre">Convention d'ouverture de compte-titres — ABCO BOURSE</div>
     <div class="sous">Remplissez tous les champs, signez, puis téléchargez votre exemplaire</div>
   </div>
-  <div class="hint" id="hint-msg">Cochez « Lu et approuvé » pour activer le téléchargement</div>
-  <button id="btn-dl" onclick="telecharger()">⬇ Télécharger PDF</button>
+  <div class="hint" id="hint-msg">Cochez « Lu et approuvé » puis cliquez Imprimer → Enregistrer en PDF</div>
+  <button id="btn-dl" onclick="telecharger()">🖨 Imprimer / Enregistrer PDF</button>
 </div>
 
 <div id="scroll-area">
@@ -641,82 +679,25 @@ function onAppro() {
   document.getElementById('hint-msg').style.display = ok ? 'none' : '';
 }
 
-/* ── Téléchargement PDF via html2pdf ── */
+/* ── Impression PDF ── */
 function telecharger() {
   if (!document.getElementById('cb-appro').checked) {
     toast('Veuillez cocher \u00ab\u00a0Lu et approuv\u00e9\u00a0\u00bb'); return;
   }
 
-  /* 1. Signature canvas → image */
+  /* Signature canvas → image fixe pour l'impression */
   var canvas = document.getElementById('sig-canvas');
-  var vide = document.createElement('canvas');
+  var vide   = document.createElement('canvas');
   vide.width = canvas.width; vide.height = canvas.height;
-  var zone = document.getElementById('sig-zone');
   if (canvas.toDataURL() !== vide.toDataURL()) {
     var img = document.createElement('img');
     img.src = canvas.toDataURL('image/png');
     img.style.cssText = 'width:100%;height:100%;object-fit:contain;display:block;';
-    zone.innerHTML = '';
-    zone.appendChild(img);
+    document.getElementById('sig-zone').innerHTML = '';
+    document.getElementById('sig-zone').appendChild(img);
   }
 
-  /* 2. Nom fichier */
-  var nom    = (document.getElementById('c-nom').value    || 'NOM').toUpperCase().replace(/\s+/g,'_');
-  var prenom = (document.getElementById('c-prenom').value || 'PRENOM').replace(/\s+/g,'_');
-  var nomFichier = 'ABCO_Convention_' + nom + '_' + prenom + '.pdf';
-
-  /* 3. Masquer tout sauf #conv */
-  var topbar  = document.getElementById('topbar');
-  var appro   = document.getElementById('approbation');
-  var scrollA = document.getElementById('scroll-area');
-  topbar.style.display  = 'none';
-  appro.style.display   = 'none';
-
-  /* 4. Forcer #conv en position fixe top-left, largeur exacte 794px */
-  var conv = document.getElementById('conv');
-  var prevStyle = conv.getAttribute('style') || '';
-  conv.style.cssText = [
-    'position:fixed',
-    'top:0',
-    'left:0',
-    'width:794px',
-    'margin:0',
-    'padding:16mm 18mm 20mm',
-    'box-shadow:none',
-    'background:#fff',
-    'z-index:9999'
-  ].join('!important;') + '!important';
-
-  /* 5. Forcer body background blanc */
-  var prevBodyBg = document.body.style.background;
-  document.body.style.background = '#fff';
-
-  /* 6. html2pdf */
-  var opt = {
-    margin:      0,
-    filename:    nomFichier,
-    image:       { type: 'jpeg', quality: 0.95 },
-    html2canvas: {
-      scale:       2,
-      useCORS:     true,
-      windowWidth: 794,
-      windowHeight: conv.scrollHeight,
-      x: 0,
-      y: 0,
-      scrollX: 0,
-      scrollY: 0
-    },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-    pagebreak: { mode: 'avoid-all' }
-  };
-
-  html2pdf().set(opt).from(conv).save().then(function() {
-    /* 7. Restaurer */
-    conv.setAttribute('style', prevStyle);
-    document.body.style.background = prevBodyBg;
-    topbar.style.display  = '';
-    appro.style.display   = '';
-  });
+  window.print();
 }
 
 /* ── Toast ── */
