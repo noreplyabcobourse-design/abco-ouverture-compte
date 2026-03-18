@@ -1113,7 +1113,7 @@ function onSmileIDClick() {
     const hintBel   = document.getElementById("locked-hint-bel");
     const numBel    = document.getElementById("num-bel");
     if (cardBel)  { cardBel.classList.remove("next-step-locked"); }
-    if (btnBel)   { btnBel.classList.remove("btn-convention-locked"); btnBel.classList.add("btn-convention-unlocked"); }
+    if (btnBel)   { btnBel.classList.remove("btn-convention-locked"); btnBel.classList.add("btn-convention-unlocked"); btnBel.href = "abco-convention-bel.html?id=" + encodeURIComponent(window._convDocId || ""); }
     if (hintBel)  { hintBel.textContent = "✅ Disponible"; hintBel.style.color = "var(--green)"; }
     if (numBel)   { numBel.classList.remove("next-step-num-locked"); }
     // Débloquer aussi la carte Gestion Déléguée
@@ -1122,7 +1122,7 @@ function onSmileIDClick() {
     const hintGestion  = document.getElementById("locked-hint-gestion");
     const numGestion   = document.getElementById("num-gestion");
     if (cardGestion)  { cardGestion.classList.remove("next-step-locked"); }
-    if (btnGestion)   { btnGestion.classList.remove("btn-convention-locked"); btnGestion.classList.add("btn-convention-unlocked"); }
+    if (btnGestion)   { btnGestion.classList.remove("btn-convention-locked"); btnGestion.classList.add("btn-convention-unlocked"); btnGestion.href = "abco-convention-gestion.html?id=" + encodeURIComponent(window._convDocId || ""); }
     if (hintGestion)  { hintGestion.textContent = "✅ Disponible"; hintGestion.style.color = "var(--green)"; }
     if (numGestion)   { numGestion.classList.remove("next-step-num-locked"); }
   }, 3000);

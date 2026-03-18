@@ -729,6 +729,127 @@ function toast(msg) {
   t.classList.add('show');
   setTimeout(function(){ t.classList.remove('show'); }, 3000);
 }
+
+/* ══════════════════════════════════════
+   PRÉ-REMPLISSAGE DEPUIS FIRESTORE
+══════════════════════════════════════ */
+(async function() {
+  const params = new URLSearchParams(window.location.search);
+  const docId  = params.get('id');
+  if (!docId) return; // Pas d'ID → remplissage manuel
+
+  const FIREBASE_API_KEY  = 'AIzaSyBP2viPdyOZr--CJtmv1R5anR9KRBW-m1A';
+  const FIRESTORE_PROJECT = 'abco-digital-onboarding-21f8d';
+  const url = `https://firestore.googleapis.com/v1/projects/${FIRESTORE_PROJECT}/databases/(default)/documents/demandes_comptes/${docId}?key=${FIREBASE_API_KEY}`;
+
+  try {
+    const res  = await fetch(url);
+    if (!res.ok) return;
+    const json = await res.json();
+    const f    = json.fields || {};
+
+    // Fonction utilitaire : lire une valeur Firestore
+    const v = (key) => {
+      if (!f[key]) return '';
+      return f[key].stringValue || f[key].integerValue || f[key].booleanValue || '';
+    };
+
+    // Fonction utilitaire : remplir un input si il existe
+    const fill = (id, val) => {
+      const el = document.getElementById(id);
+      if (el && val) el.value = val;
+    };
+
+    // ── CONVENTION COMPTE-TITRES ──
+    fill('c-nom',    v('nom'));
+    fill('c-prenom', v('prenom'));
+    fill('c-naiss',  v('dob') + (v('lieuNaissance') ? ', ' + v('lieuNaissance') : ''));
+    fill('c-adresse', v('adresse'));
+    fill('c-prof',   v('profession'));
+    fill('c-tel',    v('telephone'));
+    fill('appro-nom', v('prenom') + ' ' + v('nom'));
+
+    // Tableau domicile titulaire
+    const fillByName = (name, val) => {
+      const el = document.querySelector(`input[id="${name}"], input[name="${name}"]`);
+      if (el && val) el.value = val;
+    };
+
+    // Champs tableau domicile (t-dom)
+    const setField = (sel, val) => {
+      const el = document.querySelector(sel);
+      if (el && val) el.value = val;
+    };
+
+    // Civilité radio
+    const civ = v('civilite');
+    if (civ) {
+      const bxCivT = document.getElementById('bx-civ-t-' + (civ === 'M.' ? 'm' : civ === 'Mme' ? 'mme' : 'mlle'));
+      if (bxCivT) { document.querySelectorAll('[id^="bx-civ-t-"]').forEach(b => b.classList.remove('on')); bxCivT.classList.add('on'); }
+    }
+
+    // ── CONVENTION BEL ──
+    fill('pp-nom',     v('nom'));
+    fill('pp-prenom',  v('prenom'));
+    fill('pp-naiss',   v('dob') + (v('lieuNaissance') ? ', ' + v('lieuNaissance') : ''));
+    fill('pp-adresse', v('adresse'));
+    fill('pp-prof',    v('profession'));
+    fill('pp-tel',     v('telephone'));
+    fill('pp-cni',     v('idNumber'));
+    fill('appro-nom',  v('prenom') + ' ' + v('nom'));
+
+    // Sélectionner Personne Physique par défaut si données présentes
+    if (v('nom') && typeof radioType === 'function') radioType('pp');
+
+    // ── CONVENTION GESTION DÉLÉGUÉE ──
+    fill('c-nom',     v('nom'));
+    fill('c-prenom',  v('prenom'));
+    fill('c-naiss',   v('dob') + (v('lieuNaissance') ? ', ' + v('lieuNaissance') : ''));
+    fill('c-adresse', v('adresse'));
+    fill('c-prof',    v('profession'));
+    fill('c-tel',     v('telephone'));
+    fill('c-cni',     v('idNumber'));
+    fill('appro-nom', v('prenom') + ' ' + v('nom'));
+
+    // Numéro de compte
+    fill('c-num', v('numeroCompte') || '');
+
+    // Bénéficiaire décès
+    fill('c-benef', v('beneficiairesNom') || '');
+    if (v('beneficiairesDeces') === 'succession') {
+      const bxSucc = document.getElementById('bx-succ');
+      if (bxSucc) { bxSucc.classList.add('on'); }
+    } else if (v('beneficiairesNom')) {
+      const bxBenef = document.getElementById('bx-benef');
+      if (bxBenef) { bxBenef.classList.add('on'); }
+    }
+
+    // Horizon de placement (convention gestion déléguée)
+    const horizon = v('horizon');
+    if (horizon && typeof radioHorizon === 'function') {
+      if (horizon.includes('Court'))  radioHorizon('ct');
+      else if (horizon.includes('Moyen')) radioHorizon('mt');
+      else if (horizon.includes('Long'))  radioHorizon('lt');
+    }
+
+    // Profil risque (convention gestion déléguée)
+    const risque = v('risque');
+    if (risque && typeof selectProfil === 'function') {
+      if (risque.includes('prudent') || risque.includes('Prudent'))           selectProfil('prudent');
+      else if (risque.includes('conserv') || risque.includes('Conserv'))      selectProfil('conservateur');
+      else if (risque.includes('quilibr') || risque.includes('quilibr'))      selectProfil('equilibre');
+      else if (risque.includes('croissance') || risque.includes('Croissance')) selectProfil('croissance');
+      else if (risque.includes('audac') || risque.includes('Audac'))           selectProfil('audacieux');
+    }
+
+    // Toast de confirmation
+    if (typeof toast === 'function') toast('✅ Champs pré-remplis depuis votre dossier');
+
+  } catch(e) {
+    console.warn('Pré-remplissage impossible:', e);
+  }
+})();
+
 </script>
 
 </body>
