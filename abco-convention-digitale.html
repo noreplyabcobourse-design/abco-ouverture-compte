@@ -962,6 +962,22 @@ function toast(msg) {
       });
     }
 
+    // ── COCHER "LU ET APPROUVÉ" automatiquement ──
+    const cbAppro = document.getElementById('cb-appro');
+    const approNom = document.getElementById('appro-nom');
+    const prenomVal = v('prenom') || '';
+    const nomVal    = v('nom')    || '';
+    const fullName  = (prenomVal + ' ' + nomVal).trim();
+    if (cbAppro && !cbAppro.checked) {
+      cbAppro.checked = true;
+      if (typeof onAppro === 'function') onAppro();
+    }
+    if (approNom && fullName) {
+      approNom.value = fullName;
+      // Déclencher l'événement oninput si présent
+      approNom.dispatchEvent(new Event('input'));
+    }
+
     // Toast confirmation
     if (typeof toast === 'function') toast('✅ Formulaire pré-rempli');
 

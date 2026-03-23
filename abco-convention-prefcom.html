@@ -185,7 +185,7 @@ input.f:focus{border-bottom-color:#175a4f}
   <div id="approbation">
     <input type="checkbox" id="cb-appro" onchange="toggleAppro()">
     <label for="cb-appro">
-      Je, <input class="f" id="appro-nom" type="text" placeholder="Nom complet" style="width:160px"
+      Je soussigné(e), <input class="f" id="appro-nom" type="text" placeholder="Nom complet" style="width:160px"
         oninput="document.getElementById('sig-nom-label').textContent=this.value">
       d&eacute;clare avoir <b>lu et compris</b> l'int&eacute;gralit&eacute; du pr&eacute;sent document et en accepte tous les termes sans r&eacute;serve.
     </label>
@@ -486,6 +486,22 @@ function telecharger(){
           }
         });
       });
+    }
+
+    // ── COCHER "LU ET APPROUVÉ" automatiquement ──
+    const cbAppro = document.getElementById('cb-appro');
+    const approNom = document.getElementById('appro-nom');
+    const prenomVal = v('prenom') || '';
+    const nomVal    = v('nom')    || '';
+    const fullName  = (prenomVal + ' ' + nomVal).trim();
+    if (cbAppro && !cbAppro.checked) {
+      cbAppro.checked = true;
+      if (typeof onAppro === 'function') onAppro();
+    }
+    if (approNom && fullName) {
+      approNom.value = fullName;
+      // Déclencher l'événement oninput si présent
+      approNom.dispatchEvent(new Event('input'));
     }
 
     // Toast confirmation
