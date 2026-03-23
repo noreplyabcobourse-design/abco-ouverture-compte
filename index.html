@@ -1204,6 +1204,7 @@ function onSmileIDClick() {
   }, 3000);
 }
 document.addEventListener("DOMContentLoaded", function() {
+  console.log("[DEBUG] DOMContentLoaded fired");
 
   // Date max naissance = aujourd'hui - 18 ans
   var dobEl = document.getElementById('dob');
@@ -1215,7 +1216,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // -- Selection des cartes de compte (event delegation) --
   const grid = document.getElementById("account-cards-grid");
+  console.log("[DEBUG] grid trouvé:", grid);
+  if (!grid) { console.error("[DEBUG] account-cards-grid INTROUVABLE !"); return; }
   grid.addEventListener("click", function(e) {
+    console.log("[DEBUG] click sur grid, target:", e.target);
     const card = e.target.closest(".account-card");
     if (!card) return;
     const type = card.getAttribute("data-type");
