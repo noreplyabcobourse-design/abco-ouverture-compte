@@ -857,6 +857,26 @@ function telecharger() {
       }
     }
 
+
+    // ── LECTURE SEULE pour l'agent (tous champs sauf N° de compte) ──
+    setTimeout(function() {
+      document.querySelectorAll('input.f, input.appro-nom').forEach(function(el) {
+        if (el.id === 'c-num') return; // N° compte éditable
+        el.readOnly = true;
+        el.style.background = 'transparent';
+        el.style.cursor = 'default';
+        el.style.userSelect = 'none';
+      });
+      // Désactiver aussi les cases à cocher et radios (sauf cb-appro géré séparément)
+      document.querySelectorAll('.bx').forEach(function(bx) {
+        bx.parentElement.style.pointerEvents = 'none';
+        bx.parentElement.style.cursor = 'default';
+      });
+      // Désactiver canvas signature
+      var canvas = document.getElementById('sig-canvas');
+      if (canvas) canvas.style.pointerEvents = 'none';
+    }, 500);
+
     // Toast confirmation
     if (typeof toast === 'function') toast('✅ Formulaire pré-rempli');
 
