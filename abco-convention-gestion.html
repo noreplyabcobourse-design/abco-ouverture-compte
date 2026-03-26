@@ -437,6 +437,16 @@ function telecharger(){
       if(old)old.remove();
     },500);
   }
+
+  /* Mettre à jour Firestore — convention signée */
+  (function(){
+    var docId=(new URLSearchParams(window.location.search)).get('id');
+    if(!docId) return;
+    fetch('https://firestore.googleapis.com/v1/projects/abco-digital-onboarding-21f8d/databases/(default)/documents/demandes_comptes/'+docId+'?updateMask.fieldPaths=conventionGestionSigned&key=AIzaSyBP2viPdyOZr--CJtmv1R5anR9KRBW-m1A',{
+      method:'PATCH',headers:{'Content-Type':'application/json'},
+      body:'{"fields": {"conventionGestionSigned": {"booleanValue": true}}}'
+    }).catch(function(e){console.warn('Firestore:',e);});
+  })();
   img.onload=function(){setTimeout(doPrint,100);};
   setTimeout(doPrint,400);
 }
