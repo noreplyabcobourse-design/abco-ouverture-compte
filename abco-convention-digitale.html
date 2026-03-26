@@ -987,6 +987,28 @@ function toast(msg) {
       approNom.dispatchEvent(new Event('input'));
     }
 
+    // ── SI DÉJÀ SIGNÉ PAR LE CLIENT → case cochée en lecture seule ──
+    const signed = f['conventionCompteSigned'] && f['conventionCompteSigned'].booleanValue === true;
+    if (signed) {
+      const cbAppro = document.getElementById('cb-appro');
+      if (cbAppro) {
+        cbAppro.checked  = true;
+        cbAppro.disabled = true;
+        cbAppro.style.opacity = '0.6';
+        cbAppro.style.cursor  = 'not-allowed';
+        if (typeof onAppro === 'function') onAppro();
+        if (typeof toggleAppro === 'function') toggleAppro();
+      }
+      // Afficher une mention "Signé par le client"
+      const appro = document.getElementById('approbation');
+      if (appro) {
+        const badge = document.createElement('div');
+        badge.style.cssText = 'margin-top:8px;font-size:11px;color:#175a4f;font-weight:600;';
+        badge.textContent = '✅ Document lu et approuvé par le client';
+        appro.appendChild(badge);
+      }
+    }
+
     // Toast confirmation
     if (typeof toast === 'function') toast('✅ Formulaire pré-rempli');
 
