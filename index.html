@@ -1099,7 +1099,7 @@ function buildSummary() {
 // SOUMISSION FIRESTORE
 // ==============================================
 async function submitForm() {
-  if (!document.getElementById("accept-terms").checked) { showToast("Veuillez accepter les conditions générales", "error"); return; }
+ // if (!document.getElementById("accept-terms").checked) { showToast("Veuillez accepter les conditions générales", "error"); return; }
   if (!document.getElementById("accept-data").checked)  { showToast("Veuillez accepter la collecte des données", "error"); return; }
 
   const btn = document.getElementById("btn-submit");
