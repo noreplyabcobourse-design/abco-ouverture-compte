@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="format-detection" content="telephone=no">
 <title>ABCO — Ouverture de Compte Titre</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -16,7 +17,8 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
 
 /* -- HERO -- */
 .hero{background:linear-gradient(135deg,var(--green) 0%,#0e3d35 100%);padding:32px 24px 28px;text-align:center;position:relative;overflow:hidden;}
-.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 80% 20%,rgba(182,152,90,0.08) 0%,transparent 70%),repeating-linear-gradient(60deg,rgba(182,152,90,0.025) 0px,rgba(182,152,90,0.025) 1px,transparent 1px,transparent 48px);}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 80% 20%,rgba(182,152,90,0.08) 0%,transparent 70%),repeating-linear-gradient(60deg,rgba(182,152,90,0.025) 0px,rgba(182,152,90,0.025) 1px,transparent 1px,transparent 48px);pointer-events:none;z-index:0;}
+.hero *{position:relative;z-index:1;}
 .hero-logo{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:20px;position:relative;}
 .hero-logo img{height:54px;width:54px;object-fit:cover;border-radius:12px;border:1.5px solid rgba(182,152,90,0.5);}
 .hero-logo .name{font-family:"Playfair Display",serif;font-size:28px;font-weight:700;color:#b6985a;}
@@ -732,7 +734,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
     En soumettant ce formulaire, vous déclarez que toutes les informations fournies sont exactes.
     <div class="legal-check">
       <input type="checkbox" id="accept-data">
-      <label for="accept-data" style="font-size:12px;text-transform:none;letter-spacing:0;color:var(--text);">Je consens à la <strong style="color:var(--green)">collecte et au traitement de mes données personnelles</strong></label>
+      <label for="accept-data" style="font-size:12px;text-transform:none;letter-spacing:0;color:var(--text);">Je consens à la <strong style="color:var(--green);cursor:pointer;text-decoration:underline;" onclick="var m=document.getElementById('modal-donnees');m.style.display='flex';m.style.pointerEvents='all';">collecte et au traitement de mes données personnelles</strong> conformément à la loi n° 2008-12.</label>
     </div>
   </div>
   <div class="btn-row">
@@ -754,9 +756,11 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
     <div class="next-step-card" id="card-prefcom"><div class="next-step-num" id="num-prefcom">4</div><div class="next-step-body"><div class="next-step-title">📬 Préférence de communication &amp; Autorisation ordre électronique</div><div class="next-step-desc">Indiquez votre mode de communication préféré.</div><a class="smile-link btn-convention-unlocked" id="btn-prefcom" href="#" target="_blank" onclick="markDone('prefcom')">📬 Accéder au document</a></div></div>
     <div class="next-step-card" id="card-smileid" style="border-color:var(--gold);"><div class="next-step-num" style="background:var(--gold);">5</div><div class="next-step-body"><div class="next-step-title">📸 Vérification d'identité — SmileID</div><div class="next-step-desc">Dernière étape obligatoire.</div><a class="smile-link" id="btn-smileid" href="https://links.usesmileid.com/7134/09f523c3-665d-492e-8493-0d70385fd10e" target="_blank">🔗 Lancer la vérification SmileID</a></div></div>
   </div>
-  <div style="margin-top:24px;text-align:center;font-size:12px;color:var(--muted);">Pour toute question : <strong style="color:var(--green)">contact@abco.sn</strong></div>
+  <div style="margin-top:24px;text-align:center;font-size:12px;color:var(--muted);">Pour toute question : <strong style="color:var(--green)"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9efdf1f0eafffdeadefffcfdf1b0edf0">[email&#160;protected]</a></strong></div>
 
 </div><!-- /form-container -->
+
+<div style="height:48px;"></div>
 
 <div class="site-footer">
   <div class="footer-logo">ABCO</div>
@@ -764,7 +768,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
   <div>Résidence Moumtazz, Avenue Cheikh Anta Diop, Mermoz 2ème porte, Dakar, Sénégal</div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ==============================================
 // FIRESTORE REST API
 // ==============================================
@@ -1285,7 +1289,35 @@ window.pfSelect = function(val) {
 
 
 function markDone(k){try{var id=window._convDocId||"";if(!id||id.length<5)return;var d=JSON.parse(localStorage.getItem("abco_conv_done_"+id)||"{}");d[k]=true;localStorage.setItem("abco_conv_done_"+id,JSON.stringify(d));setTimeout(function(){applyDoneState(id);},1500);}catch(e){}}
-function applyDoneState(id){try{if(!id||id.length<5)return;var d=JSON.parse(localStorage.getItem("abco_conv_done_"+id)||"{}"),m={convention:{b:"btn-convention",c:"card-convention",l:"✅ Convention signée"},bel:{b:"btn-bel",c:"card-bel",l:"✅ BEL signée"},gestion:{b:"btn-gestion",c:"card-gestion",l:"✅ Gestion signée"},prefcom:{b:"btn-prefcom",c:"card-prefcom",l:"✅ Signé"}};Object.keys(d).forEach(function(k){var x=m[k];if(!x)return;var b=document.getElementById(x.b),cv=document.getElementById(x.c);if(b){b.classList.remove("btn-convention-unlocked");b.classList.add("btn-convention-done");b.textContent=x.l;}if(cv)cv.classList.add("done");});}catch(e){}}
-</script>
-</body>
-</html>
+function applyDoneState(id){try{if(!id||id.length<5)return;var d=JSON.parse(localStorage.getItem("abco_conv_done_"+id)||"{}"),m={convention:{b:"btn-convention",c:"card-convention",l:"✅ Convention signée"},bel:{b:"btn-bel",c:"card-bel",l:"✅ BEL signée"},gestion:{b:"btn-gestion",c:"card-gestion",l:"✅ Gestion signée"},prefcom:{b:"btn-prefcom",c:"card-prefcom",l:"✅ Signé"}};Object.keys(d).forEach(function(k){var x=m[k];if(!x)return;var b=document.getElemen
+<!-- MODALE POLITIQUE DE DONNÉES -->
+<div id="modal-donnees" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.55);align-items:center;justify-content:center;padding:16px;pointer-events:none;">
+  <div style="background:#fff;border-radius:16px;width:640px;max-width:96vw;max-height:88vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(0,0,0,0.3);">
+    <div style="background:#175a4f;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+      <div style="color:#fff;font-size:15px;font-weight:700;">🔒 Politique de protection des données personnelles</div>
+      <button onclick="var m=document.getElementById('modal-donnees');m.style.display='none';m.style.pointerEvents='none';" style="background:none;border:none;color:rgba(255,255,255,0.8);font-size:22px;cursor:pointer;line-height:1;">✕</button>
+    </div>
+    <div style="padding:24px;overflow-y:auto;font-size:13px;line-height:1.7;color:#333;">
+      <p style="margin-bottom:12px;"><strong>ABCO — Société de Gestion et d'Intermédiation (SGI)</strong><br>Résidence Moumtazz, Avenue Cheikh Anta Diop, Mermoz, Dakar, Sénégal</p>
+      <p style="margin-bottom:16px;color:#666;font-size:12px;">Conformément à la loi n° 2008-12 du 25 janvier 2008 sur la protection des données à caractère personnel et aux directives de la Commission de Protection des Données Personnelles (CDP) du Sénégal.</p>
+      <h4 style="color:#175a4f;margin-bottom:8px;">1. Responsable du traitement</h4>
+      <p style="margin-bottom:16px;">ABCO SGI est responsable du traitement de vos données personnelles collectées via ce formulaire d'ouverture de compte-titres.</p>
+      <h4 style="color:#175a4f;margin-bottom:8px;">2. Données collectées</h4>
+      <p style="margin-bottom:16px;">Nous collectons les données suivantes : informations d'identité (nom, prénom, date et lieu de naissance, nationalité), coordonnées (adresse, email, téléphone), pièce d'identité, situation professionnelle et financière, profil investisseur, et le cas échéant, informations sur le co-titulaire ou tuteur légal.</p>
+      <h4 style="color:#175a4f;margin-bottom:8px;">3. Finalités du traitement</h4>
+      <p style="margin-bottom:16px;">Vos données sont collectées pour : l'ouverture et la gestion de votre compte-titres, le respect des obligations légales et réglementaires (KYC, LCB-FT), la gestion de la relation client, et la conformité aux exigences de l'AMF-UMOA et du DC/BR de l'UEMOA.</p>
+      <h4 style="color:#175a4f;margin-bottom:8px;">4. Destinataires des données</h4>
+      <p style="margin-bottom:16px;">Vos données sont accessibles uniquement aux agents habilités d'ABCO SGI. Elles peuvent être transmises aux autorités de régulation (AMF-UMOA, BCEAO) dans le cadre des obligations légales.</p>
+      <h4 style="color:#175a4f;margin-bottom:8px;">5. Durée de conservation</h4>
+      <p style="margin-bottom:16px;">Vos données sont conservées pendant toute la durée de la relation contractuelle et 10 ans après sa clôture, conformément aux obligations légales en vigueur.</p>
+      <h4 style="color:#175a4f;margin-bottom:8px;">6. Vos droits</h4>
+      <p style="margin-bottom:16px;">Conformément à la loi n° 2008-12, vous disposez d'un droit d'accès, de rectification, d'opposition et de suppression de vos données. Pour exercer ces droits, contactez-nous à : <strong>contact@abco-bourse.sn</strong></p>
+      <h4 style="color:#175a4f;margin-bottom:8px;">7. Sécurité des données</h4>
+      <p style="margin-bottom:16px;">ABCO SGI met en œuvre toutes les mesures techniques et organisationnelles nécessaires pour protéger vos données contre tout accès non autorisé, perte ou divulgation.</p>
+      <p style="font-size:11px;color:#999;border-top:1px solid #eee;padding-top:12px;margin-top:8px;">Document établi conformément à la loi n° 2008-12 du 25 janvier 2008 — République du Sénégal.</p>
+    </div>
+    <div style="padding:16px 24px;border-top:1px solid #eee;flex-shrink:0;display:flex;justify-content:flex-end;">
+      <button onclick="var m=document.getElementById('modal-donnees');m.style.display='none';m.style.pointerEvents='none';document.getElementById('accept-data').checked=true;" style="background:#175a4f;color:#fff;border:none;border-radius:8px;padding:10px 24px;font-size:13px;font-weight:700;cursor:pointer;">J'ai lu et j'accepte</button>
+    </div>
+  </div>
+</div>
