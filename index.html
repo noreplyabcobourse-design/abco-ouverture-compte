@@ -344,7 +344,12 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
       <div class="fg"><label>Prénom(s) <span class="req">*</span></label><input type="text" id="prenom-conj" required placeholder="Prénom(s)" oninput="this.value=this.value.replace(/[0-9]/g,'')"></div>
       <div class="fg"><label>Date de naissance <span class="req">*</span></label><input type="date" id="dob-conj" required></div>
       <div class="fg"><label>Lieu de naissance <span class="req">*</span></label><input type="text" id="lieu-naissance-conj" required placeholder="Ville, Pays"></div>
-      <div class="fg"><label>Nationalité <span class="req">*</span></label><input type="text" id="nationalite-conj" required></div>
+     <div class="fg"><label>Nationalité <span class="req">*</span></label>
+     <input type="text" id="nationalite-conj" required oninput="checkNationaliteConj(this)">
+     <div id="nationalite-conj-error" style="display:none;color:#dc2626;font-size:12px;margin-top:4px;">⚠️ Ouverture de compte impossible pour les ressortissants américains (FATCA)</div>
+    </div>
+	 
+	 
     </div>
     <div class="fg"><label>Adresse de résidence <span class="req">*</span></label>
       <div class="radio-group" style="margin-bottom:8px;">
@@ -355,9 +360,9 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
     </div>
     <div class="fg"><label>Pièce d'identité <span class="req">*</span></label>
       <div class="radio-group">
-        <label class="radio-opt"><input type="radio" name="id-type-conj" value="CNI"> CNI</label>
-        <label class="radio-opt"><input type="radio" name="id-type-conj" value="Extrait de naissance"> Extrait de naissance</label>
-        <label class="radio-opt"><input type="radio" name="id-type-conj" value="Passeport"> Passeport</label>
+        <label class="radio-opt"><input type="radio" name="id-type-conj" value="CNI" onchange="toggleDateFieldsConj(this.value)"> CNI</label>
+        <label class="radio-opt"><input type="radio" name="id-type-conj" value="Extrait de naissance" onchange="toggleDateFieldsConj(this.value)"> Extrait de naissance</label>
+        <label class="radio-opt"><input type="radio" name="id-type-conj" value="Passeport" onchange="toggleDateFieldsConj(this.value)"> Passeport</label>
       </div>
     </div>
     <div class="grid3">
@@ -911,6 +916,16 @@ function validateStep(step) {
       }
     }
   }
+  // Nationalité américaine — CO-TITULAIRE
+const natConj = document.getElementById('nationalite-conj');
+if (natConj && isVisible(natConj)) {
+  checkNationaliteConj(natConj);
+  if (natConj.classList.contains('invalid')) {
+    showToast('Ouverture de compte impossible pour les ressortissants américains (FATCA)', 'error');
+    return false;
+  }
+}
+  
 
   // Step 2 : validation âge minimum 18 ans
   if (step === 2) {
@@ -928,6 +943,23 @@ function validateStep(step) {
       }
     }
   }
+  
+  // Step 2 : validation âge minimum 18 ans — CO-TITULAIRE
+if (step === 2) {
+  const dobConj = document.getElementById('dob-conj');
+  if (dobConj && dobConj.value && isVisible(dobConj)) {
+    const naissance = new Date(dobConj.value);
+    const aujourdhui = new Date();
+    let age = aujourdhui.getFullYear() - naissance.getFullYear();
+    const moisDiff = aujourdhui.getMonth() - naissance.getMonth();
+    if (moisDiff < 0 || (moisDiff === 0 && aujourdhui.getDate() < naissance.getDate())) age--;
+    if (age < 18) {
+      dobConj.classList.add('invalid');
+      showToast('Le co-titulaire doit avoir au moins 18 ans', 'error');
+      return false;
+    }
+  }
+}
 
   // Step 4 : signature obligatoire
   if (step === 4) {
@@ -1045,6 +1077,23 @@ function checkNationalite(input) {
     if (errDiv) errDiv.style.display = 'none';
   }
 }
+function checkNationaliteConj(input) {
+  const val = input.value.toLowerCase().trim();
+  const americaine = ['américain', 'americain', 'américaine', 'americaine',
+    'usa', 'us', 'etats-unis', 'états-unis', 'etats unis', 'états unis',
+    'united states', 'american'];
+  const isAmerican = americaine.some(kw => val.includes(kw));
+  const errDiv = document.getElementById('nationalite-conj-error');
+  if (isAmerican) {
+    input.classList.add('invalid');
+    if (errDiv) errDiv.style.display = 'block';
+  } else {
+    input.classList.remove('invalid');
+    if (errDiv) errDiv.style.display = 'none';
+  }
+}
+
+
 
 // ==============================================
 // TOGGLE DATE FIELDS (piece identite)
@@ -1056,6 +1105,18 @@ function toggleDateFields(idType) {
     if (el) el.style.display = showDates ? "" : "none";
   });
   ["id-delivrance", "id-expiration"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.required = showDates; if (!showDates) el.value = ""; }
+  });
+}
+
+function toggleDateFieldsConj(idType) {
+  const showDates = idType !== "Extrait de naissance";
+  ["wrap-id-delivrance-conj", "wrap-id-expiration-conj"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = showDates ? "" : "none";
+  });
+  ["id-delivrance-conj", "id-expiration-conj"].forEach(id => {
     const el = document.getElementById(id);
     if (el) { el.required = showDates; if (!showDates) el.value = ""; }
   });
