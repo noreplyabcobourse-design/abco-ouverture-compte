@@ -589,6 +589,16 @@ input.appro-nom{
       </div>
       <div class="sig-nom" id="sig-nom-client">&nbsp;</div>
     </div>
+
+    <!-- CO-TITULAIRE -->
+    <div class="sig-bloc" id="sig-bloc-conj" style="display:none;">
+      <div class="sig-titre">Le Co-titulaire</div>
+      <div class="sig-sous">Co-titulaire du compte</div>
+      <div class="sig-zone">
+        <span class="sig-hint">Signez ici</span>
+      </div>
+      <div class="sig-nom" id="sig-nom-conj">&nbsp;</div>
+    </div>
   </div>
 
  <!-- LU ET APPROUVÉ -->
@@ -924,6 +934,17 @@ if (pidC) {
     const label = bx.parentElement.textContent.trim();
     if (pidC.includes(label) || label.includes(pidC)) bx.classList.add('on');
   });
+}
+
+// Afficher et remplir le nom sous la signature co-titulaire
+const sigBlocConj = document.getElementById('sig-bloc-conj');
+const sigNomConj  = document.getElementById('sig-nom-conj');
+const nomCompletConj = ((v('prenomConj') || '') + ' ' + (v('nomConj') || '')).trim();
+if (nomCompletConj) {
+  if (sigBlocConj) sigBlocConj.style.display = 'block';
+  if (sigNomConj)  sigNomConj.textContent = nomCompletConj;
+} else {
+  if (sigBlocConj) sigBlocConj.style.display = 'none';
 }
 
 // Afficher et remplir le champ co-titulaire dans "Lu et approuvé"
