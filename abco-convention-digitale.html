@@ -590,16 +590,19 @@ input.appro-nom{
       <div class="sig-nom" id="sig-nom-client">&nbsp;</div>
     </div>
 
-    <!-- CO-TITULAIRE -->
+    
+  
+  <!-- CO-TITULAIRE -->
     <div class="sig-bloc" id="sig-bloc-conj" style="display:none;">
       <div class="sig-titre">Le Co-titulaire</div>
       <div class="sig-sous">Co-titulaire du compte</div>
-      <div class="sig-zone">
-        <span class="sig-hint">Signez ici</span>
+      <div class="sig-zone" id="sig-zone-conj">
+        <canvas id="sig-canvas-conj" width="360" height="108"></canvas>
+        <span class="sig-hint" id="sig-hint-conj">Signez ici</span>
+        <button class="sig-eff" onclick="effacerSigConj()">Effacer</button>
       </div>
       <div class="sig-nom" id="sig-nom-conj">&nbsp;</div>
     </div>
-  </div>
 
  <!-- LU ET APPROUVÉ -->
   <div id="approbation">
@@ -706,6 +709,61 @@ function majNomSig() {
   var v = document.getElementById('appro-nom').value.trim();
   document.getElementById('sig-nom-client').textContent = v || ' ';
 }
+
+function effacerSigConj() {
+  var canvas = document.getElementById('sig-canvas-conj');
+  canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+  document.getElementById('sig-hint-conj').style.display = '';
+}
+
+
+/* ── Signature canvas CO-TITULAIRE ── */
+(function() {
+  var canvas, ctx, dessin = false;
+  window.addEventListener('DOMContentLoaded', function() {
+    canvas = document.getElementById('sig-canvas-conj');
+    if (!canvas) return;
+    ctx    = canvas.getContext('2d');
+    ctx.strokeStyle = '#1a1a6e';
+    ctx.lineWidth   = 1.8;
+    ctx.lineCap     = 'round';
+    ctx.lineJoin    = 'round';
+    function coords(e) {
+      var r  = canvas.getBoundingClientRect();
+      var sx = canvas.width  / r.width;
+      var sy = canvas.height / r.height;
+      var cx = e.touches ? e.touches[0].clientX : e.clientX;
+      var cy = e.touches ? e.touches[0].clientY : e.clientY;
+      return { x:(cx-r.left)*sx, y:(cy-r.top)*sy };
+    }
+    function start(e) {
+      dessin = true;
+      var p = coords(e);
+      ctx.beginPath(); ctx.moveTo(p.x, p.y);
+      document.getElementById('sig-hint-conj').style.display = 'none';
+    }
+    function draw(e) {
+      if (!dessin) return;
+      e.preventDefault();
+      var p = coords(e); ctx.lineTo(p.x, p.y); ctx.stroke();
+    }
+    function stop() { dessin = false; }
+    canvas.addEventListener('mousedown',  start);
+    canvas.addEventListener('mousemove',  draw);
+    canvas.addEventListener('mouseup',    stop);
+    canvas.addEventListener('mouseleave', stop);
+    canvas.addEventListener('touchstart', start, {passive:false});
+    canvas.addEventListener('touchmove',  draw,  {passive:false});
+    canvas.addEventListener('touchend',   stop);
+  });
+})();
+
+function effacerSigConj() {
+  var canvas = document.getElementById('sig-canvas-conj');
+  canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+  document.getElementById('sig-hint-conj').style.display = '';
+}
+
 
 /* ── Lu et approuvé ── */
 function onAppro() {
