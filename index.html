@@ -1187,6 +1187,7 @@ function initSignature() {
   canvas.addEventListener("touchend",   () => drawing=false);
 
   // Afficher signature co-titulaire si compte conjoint
+  console.log("accountType =", accountType);
   const sigConjBox = document.getElementById("sig-conj-box");
   if (sigConjBox) {
     if (accountType === "conjoint") {
@@ -1437,17 +1438,16 @@ if (dobConjEl) {
   });
 
   // -- Boutons de navigation --
-  document.getElementById("btn-step1-next").addEventListener("click", goNext);
-  document.getElementById("btn-step2-prev").addEventListener("click", goPrev);
-  document.getElementById("btn-step2-next").addEventListener("click", goNext);
-  document.getElementById("btn-step3-prev").addEventListener("click", goPrev);
-  document.getElementById("btn-step3-next").addEventListener("click", goNext);
-  document.getElementById("btn-step4-prev").addEventListener("click", goPrev);
-  document.getElementById("btn-step4-next").addEventListener("click", goNext);
-  document.getElementById("btn-step5-prev").addEventListener("click", goPrev);
-  document.getElementById("btn-submit").addEventListener("click", submitForm);
-  document.getElementById("btn-sig-clear")?.addEventListener("click", clearSignature);
-  document.getElementById("btn-sig-clear-conj")?.addEventListener("click", clearSignatureConj);	 
+  document.getElementById("btn-step1-next")?.addEventListener("click", goNext);
+document.getElementById("btn-step2-prev")?.addEventListener("click", goPrev);
+document.getElementById("btn-step2-next")?.addEventListener("click", goNext);
+document.getElementById("btn-step3-prev")?.addEventListener("click", goPrev);
+document.getElementById("btn-step3-next")?.addEventListener("click", goNext);
+document.getElementById("btn-step4-prev")?.addEventListener("click", goPrev);
+document.getElementById("btn-step5-prev")?.addEventListener("click", goPrev);
+document.getElementById("btn-submit")?.addEventListener("click", submitForm);
+document.getElementById("btn-sig-clear")?.addEventListener("click", clearSignature);
+document.getElementById("btn-sig-clear-conj")?.addEventListener("click", clearSignatureConj);
 
   // -- Select questions secretes > hidden inputs --
   document.getElementById("question1-sel").addEventListener("change", e => { document.getElementById("question1-hidden").value = e.target.value; });
