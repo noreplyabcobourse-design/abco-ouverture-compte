@@ -591,12 +591,15 @@ input.appro-nom{
     </div>
   </div>
 
-  <!-- LU ET APPROUVÉ -->
+ <!-- LU ET APPROUVÉ -->
   <div id="approbation">
     <input type="checkbox" id="cb-appro" onchange="onAppro()">
     <div class="appro-txt">
       <b>Lu et approuvé —</b> Je soussigné(e)&nbsp;
       <input class="appro-nom" id="appro-nom" placeholder="Votre nom complet" oninput="majNomSig()">
+      <span id="appro-conj-wrap" style="display:none;">&nbsp;et&nbsp;
+      <input class="appro-nom" id="appro-nom-c" placeholder="Nom co-titulaire" oninput="majNomSig()">
+      </span>
       , déclare avoir lu et compris l'intégralité de la présente convention d'ouverture de compte-titres et en accepte tous les termes sans réserve.
     </div>
   </div>
@@ -921,6 +924,16 @@ if (pidC) {
     const label = bx.parentElement.textContent.trim();
     if (pidC.includes(label) || label.includes(pidC)) bx.classList.add('on');
   });
+}
+
+// Afficher et remplir le champ co-titulaire dans "Lu et approuvé"
+const approConjWrap = document.getElementById('appro-conj-wrap');
+const approNomC = document.getElementById('appro-nom-c');
+if (v('nomConj') || v('prenomConj')) {
+  if (approConjWrap) approConjWrap.style.display = 'inline';
+  if (approNomC) approNomC.value = ((v('prenomConj') || '') + ' ' + (v('nomConj') || '')).trim();
+} else {
+  if (approConjWrap) approConjWrap.style.display = 'none';
 }
 
 
