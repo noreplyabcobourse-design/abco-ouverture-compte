@@ -1162,22 +1162,10 @@ function toggleDateFieldsConj(idType) {
 }
 
 // ==============================================
+// ==============================================
 // SIGNATURE
 // ==============================================
 function initSignature() {
-
-// Afficher signature co-titulaire si compte conjoint
-const sigConjBox = document.getElementById("sig-conj-box");
-if (sigConjBox) {
-  if (accountType === "conjoint") {
-    sigConjBox.style.display = "block";
-    initSignatureConj();
-  } else {
-    sigConjBox.style.display = "none";
-    signatureDataConj = "";
-  }
-}
-document.getElementById("btn-sig-clear-conj")?.addEventListener("click", clearSignatureConj);
   const canvas = document.getElementById("sig-canvas");
   if (!canvas || canvas._init) return;
   canvas._init = true;
@@ -1197,6 +1185,21 @@ document.getElementById("btn-sig-clear-conj")?.addEventListener("click", clearSi
   canvas.addEventListener("touchstart", e => { e.preventDefault(); drawing=true; [lx,ly]=pos(e); }, {passive:false});
   canvas.addEventListener("touchmove",  e => { e.preventDefault(); if(!drawing) return; const[x,y]=pos(e); ctx.beginPath(); ctx.moveTo(lx,ly); ctx.lineTo(x,y); ctx.stroke(); [lx,ly]=[x,y]; save(); }, {passive:false});
   canvas.addEventListener("touchend",   () => drawing=false);
+
+  // Afficher signature co-titulaire si compte conjoint
+  const sigConjBox = document.getElementById("sig-conj-box");
+  if (sigConjBox) {
+    if (accountType === "conjoint") {
+      sigConjBox.style.display = "block";
+      setTimeout(() => {
+        initSignatureConj();
+        document.getElementById("btn-sig-clear-conj")?.addEventListener("click", clearSignatureConj);
+      }, 100);
+    } else {
+      sigConjBox.style.display = "none";
+      signatureDataConj = "";
+    }
+  }
 }
 
 function clearSignature() {
