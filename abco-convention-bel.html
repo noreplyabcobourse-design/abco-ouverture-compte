@@ -467,10 +467,14 @@ input.f:focus{border-bottom-color:#175a4f}
     <label for="cb-appro">
       Je soussigné(e), <input class="f" id="appro-nom" type="text" placeholder="Nom complet" style="width:160px"
         oninput="document.getElementById('sig-nom-label').textContent=this.value">
+      <span id="appro-conj-wrap" style="display:none;">&nbsp;et&nbsp;
+      <input class="f" id="appro-nom-c" type="text" placeholder="Nom co-titulaire" style="width:160px">
+      </span>
       déclare avoir <b>lu et compris</b> l'intégralité de la présente convention de bourse en ligne et en accepte tous les termes sans réserve.
     </label>
   </div>
-
+  
+  
   <!-- FOOTER -->
   <div class="footer-doc">
     ABCO Société de Gestion et d'Intermédiation au capital de 1 000 000 000 FCFA &nbsp;|&nbsp;
@@ -792,6 +796,14 @@ function telecharger() {
     img.src = sigDataConj;
   }
 }
+// Afficher nom co-titulaire dans "Je soussigné(e)"
+const approConjWrap = document.getElementById('appro-conj-wrap');
+const approNomC = document.getElementById('appro-nom-c');
+if (nomConj && approConjWrap) {
+  approConjWrap.style.display = 'inline';
+  if (approNomC) approNomC.value = nomConj;
+}
+
 
     // Horizon de placement
     const horizon = v('horizon');
