@@ -445,7 +445,17 @@ input.f:focus{border-bottom-color:#175a4f}
       <button class="sig-eff" onclick="effacerSig()">Effacer</button>
       <div class="sig-label" id="sig-nom-label"></div>
     </div>
+	<!-- CO-TITULAIRE -->
+  <div class="sig-bloc" id="sig-bloc-conj" style="display:none;">
+  <div class="sig-nom">Le Co-titulaire</div>
+  <div class="sig-sous">Co-titulaire du compte</div>
+  <div class="sig-zone" id="sig-zone-conj">
+    <span class="sig-hint-txt" id="sig-hint-conj">Signature</span>
+    <canvas id="sig-canvas-conj" width="340" height="110"></canvas>
   </div>
+  <div class="sig-label" id="sig-nom-conj-label"></div>
+  </div>	
+ </div>
 
   <p class="txt" style="font-style:italic;font-size:9.5pt;margin-top:10px;text-align:center">
     Signature(s) précédée(s) de la mention manuscrite <b>« lu et approuvé »</b>
@@ -756,6 +766,32 @@ function telecharger() {
         img.src = sigData;
       }
     }
+	
+	// ── SIGNATURE DU CO-TITULAIRE ──
+	const sigDataConj = v('signatureConj');
+	const nomConj = ((v('prenomConj') || '') + ' ' + (v('nomConj') || '')).trim();
+	const sigBlocConj = document.getElementById('sig-bloc-conj');
+	const sigNomConjLabel = document.getElementById('sig-nom-conj-label');
+
+	if (nomConj && sigBlocConj) {
+  sigBlocConj.style.display = 'block';
+	if (sigNomConjLabel) sigNomConjLabel.textContent = nomConj;
+	}
+
+	if (sigDataConj) {
+  const canvasConj = document.getElementById('sig-canvas-conj');
+  const hintConj   = document.getElementById('sig-hint-conj');
+  if (canvasConj) {
+    const img = new Image();
+    img.onload = function() {
+      const ctx = canvasConj.getContext('2d');
+      ctx.clearRect(0, 0, canvasConj.width, canvasConj.height);
+      ctx.drawImage(img, 0, 0, canvasConj.width, canvasConj.height);
+      if (hintConj) hintConj.style.display = 'none';
+    };
+    img.src = sigDataConj;
+  }
+}
 
     // Horizon de placement
     const horizon = v('horizon');
