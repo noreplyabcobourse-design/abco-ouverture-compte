@@ -1411,14 +1411,19 @@ function onSmileIDClick() {
 // ==============================================
 document.addEventListener("DOMContentLoaded", function() {
 
-  // Date max naissance = aujourd'hui - 18 ans
-  var dobEl = document.getElementById('dob');
-  if (dobEl) {
+ // Date max naissance
+var dobEl = document.getElementById('dob');
+if (dobEl) {
+  if (accountType === 'mineur') {
+    // Pas de restriction — date max = aujourd'hui
+    dobEl.max = new Date().toISOString().split('T')[0];
+  } else {
+    // Majeurs uniquement — date max = aujourd'hui - 18 ans
     var mx = new Date();
     mx.setFullYear(mx.getFullYear() - 18);
     dobEl.max = mx.toISOString().split('T')[0];
   }
-  
+}
   // Date max naissance conjoint = aujourd'hui - 18 ans
 var dobConjEl = document.getElementById('dob-conj');
 if (dobConjEl) {
@@ -1458,7 +1463,18 @@ if (dobConjEl) {
       box.style.display = "none";
       conjFields.forEach(function(id) { var el=document.getElementById(id); if(el) el.required=false; });
     }
-  });
+  // Mettre à jour date max naissance selon type
+    var dobEl = document.getElementById('dob');
+    if (dobEl) {
+      if (accountType === 'mineur') {
+        dobEl.max = new Date().toISOString().split('T')[0];
+      } else {
+        var mx = new Date();
+        mx.setFullYear(mx.getFullYear() - 18);
+        dobEl.max = mx.toISOString().split('T')[0];
+      }
+    }
+    });
 
   // -- Boutons de navigation --
   document.getElementById("btn-step1-next")?.addEventListener("click", goNext);
