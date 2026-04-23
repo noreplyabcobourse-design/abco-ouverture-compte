@@ -1081,6 +1081,12 @@ function checkAge(input) {
   var m   = aujourdhui.getMonth() - naissance.getMonth();
   if (m < 0 || (m === 0 && aujourdhui.getDate() < naissance.getDate())) age--;
   var errDiv = document.getElementById('dob-error');
+  // Pas de restriction d'âge pour les comptes mineurs
+  if (accountType === 'mineur') {
+    input.classList.remove('invalid');
+    if (errDiv) errDiv.style.display = 'none';
+    return;
+  }
   if (age < 18) {
     input.classList.add('invalid');
     if (errDiv) errDiv.style.display = 'block';
