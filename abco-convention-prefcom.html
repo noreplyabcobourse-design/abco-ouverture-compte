@@ -109,11 +109,11 @@ input.f:focus{border-bottom-color:#175a4f}
 
   <div class="sec-title">Mode de communication</div>
   <div class="check-group">
-    <div class="check-item" onclick="toggle('com-fax')"><span class="bx" id="com-fax"></span> Fax</div>
-    <div class="check-item" onclick="toggle('com-courrier')"><span class="bx" id="com-courrier"></span> Courrier</div>
     <div class="check-item" onclick="toggle('com-email')"><span class="bx" id="com-email"></span> Email</div>
+    <div class="check-item" onclick="toggle('com-sms')"><span class="bx" id="com-sms"></span> SMS</div>
+    <div class="check-item" onclick="toggle('com-courrier')"><span class="bx" id="com-courrier"></span> Courrier postal</div>
+    <div class="check-item" onclick="toggle('com-tel')"><span class="bx" id="com-tel"></span> Téléphone</div>
   </div>
-
   <p class="txt">Par le pr&eacute;sent document, je donne &agrave; ABCO l'autorisation de me transmettre toutes les informations dans le cadre de la relation qui nous lie par le mode de communication choisi ci-dessus.</p>
 
   <hr class="separateur">
@@ -536,10 +536,10 @@ if (comm) {
     vals = [comm.stringValue];
   }
   const commIds = {
-    'Fax':      'com-fax',
-    'Courrier': 'com-courrier',
-    'Email':    'com-email',
-    'Courriel': 'com-email'
+  'Email':           'com-email',
+  'SMS':             'com-sms',
+  'Courrier postal': 'com-courrier',
+  'Téléphone':       'com-tel'
   };
   vals.forEach(val => {
     const id = commIds[val];
