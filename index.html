@@ -1286,12 +1286,18 @@ function buildSummary() {
       <div class="sum-row"><span>Tolérance au risque</span><strong>${gc("risque")}</strong></div>
       <div class="sum-row"><span>Profil portefeuille</span><strong>${gc("portefeuille")}</strong></div>
     </div>
-    <div class="sum-sec"><div class="sum-title">Signature</div>
+	<div class="sum-sec"><div class="sum-title">Signature</div>
       <div style="text-align:center;padding:12px 0;">
         <img src="${signatureData}" style="max-width:260px;border:1px solid #d0d8c8;border-radius:8px;padding:8px;background:#fff;">
-        <div style="font-size:11px;color:#6b6b52;margin-top:6px;">Signature électronique</div>
+        <div style="font-size:11px;color:#6b6b52;margin-top:6px;">Signature du titulaire</div>
       </div>
-    </div>`;
+      ${accountType === 'conjoint' && signatureDataConj ? `
+      <div style="text-align:center;padding:12px 0;">
+        <img src="${signatureDataConj}" style="max-width:260px;border:1px solid #d0d8c8;border-radius:8px;padding:8px;background:#fff;">
+        <div style="font-size:11px;color:#6b6b52;margin-top:6px;">Signature du co-titulaire — ${g("prenom-conj")} ${g("nom-conj")}</div>
+      </div>` : ''}
+    </div>
+    
 }
 
 // ==============================================
