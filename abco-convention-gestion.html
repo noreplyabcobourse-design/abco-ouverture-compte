@@ -801,7 +801,9 @@ if (nomConj && approConjWrap) {
       var canvas = document.getElementById('sig-canvas');
       if (canvas) canvas.style.pointerEvents = 'none';
     }, 500);
-
+	// Désactiver canvas signature co-titulaire
+		var canvasConj = document.getElementById('sig-canvas-conj');
+		if (canvasConj) canvasConj.style.pointerEvents = 'none';
     // Toast confirmation
     if (typeof toast === 'function') toast('✅ Formulaire pré-rempli');
 
