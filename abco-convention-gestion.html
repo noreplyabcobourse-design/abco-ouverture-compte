@@ -454,13 +454,19 @@ function telecharger(){
     },500);
   }
 
-  /* Mettre à jour Firestore — convention signée */
+  /* Mettre à jour Firestore — convention signée + montants */
   (function(){
     var docId=(new URLSearchParams(window.location.search)).get('id');
     if(!docId) return;
-    fetch('https://firestore.googleapis.com/v1/projects/abco-digital-onboarding-21f8d/databases/(default)/documents/demandes_comptes/'+docId+'?updateMask.fieldPaths=conventionGestionSigned&key=AIzaSyBP2viPdyOZr--CJtmv1R5anR9KRBW-m1A',{
+    var apportChiffres = document.getElementById('c-apport-chiffres') ? document.getElementById('c-apport-chiffres').value : '';
+    var apportLettres  = document.getElementById('c-apport-lettres')  ? document.getElementById('c-apport-lettres').value  : '';
+    fetch('https://firestore.googleapis.com/v1/projects/abco-digital-onboarding-21f8d/databases/(default)/documents/demandes_comptes/'+docId+'?updateMask.fieldPaths=conventionGestionSigned&updateMask.fieldPaths=apportChiffres&updateMask.fieldPaths=apportLettres&key=AIzaSyBP2viPdyOZr--CJtmv1R5anR9KRBW-m1A',{
       method:'PATCH',headers:{'Content-Type':'application/json'},
-      body:'{"fields": {"conventionGestionSigned": {"booleanValue": true}}}'
+      body:JSON.stringify({fields:{
+        conventionGestionSigned:{booleanValue:true},
+        apportChiffres:{stringValue:apportChiffres},
+        apportLettres:{stringValue:apportLettres}
+      }})
     }).catch(function(e){console.warn('Firestore:',e);});
   })();
   img.onload=function(){setTimeout(doPrint,100);};
@@ -584,6 +590,8 @@ function telecharger(){
     // Convention Gestion Déléguée
     fill('c-cni',     v('idNumber'));
     fill('c-benef',   v('beneficiairesNom'));
+	fill('c-apport-chiffres', v('apportChiffres'));
+	fill('c-apport-lettres',  v('apportLettres'));
 
     // ── TYPE DE COMPTE ──
     const typeCompte = v('typeCompte');
