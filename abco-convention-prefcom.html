@@ -526,6 +526,31 @@ if (nomConj && approConjWrap) {
       } else if (transOrdres.stringValue) {
         vals = [transOrdres.stringValue];
       }
+	  // ── MODE DE COMMUNICATION ──
+const comm = f['communication'];
+if (comm) {
+  let vals = [];
+  if (comm.arrayValue && comm.arrayValue.values) {
+    vals = comm.arrayValue.values.map(x => x.stringValue || '');
+  } else if (comm.stringValue) {
+    vals = [comm.stringValue];
+  }
+  const commIds = {
+    'Fax':      'com-fax',
+    'Courrier': 'com-courrier',
+    'Email':    'com-email',
+    'Courriel': 'com-email'
+  };
+  vals.forEach(val => {
+    const id = commIds[val];
+    if (id) {
+      const bx = document.getElementById(id);
+      if (bx) bx.classList.add('on');
+    }
+  });
+}
+	  
+	  
       // Cocher les cases correspondantes dans la convention
       const ordreIds = {
         'Courrier':   'ord-courrier',
