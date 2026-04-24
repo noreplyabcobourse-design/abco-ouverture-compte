@@ -1205,11 +1205,14 @@ if (sigDataConj) {
 
     // ── NOM dans "Lu et approuvé" (case à cocher laissée au client) ──
     const approNom = document.getElementById('appro-nom');
-    const fullName  = ((v('prenom') || '') + ' ' + (v('nom') || '')).trim();
-    if (approNom && fullName) {
-      approNom.value = fullName;
-      approNom.dispatchEvent(new Event('input'));
-    }
+const fullName = ((v('prenom') || '') + ' ' + (v('nom') || '')).trim();
+const nomTuteurFinal = ((v('prenomConj') || '') + ' ' + (v('nomConj') || '')).trim();
+const isMineur = (v('typeCompte') === 'mineur' || v('typeCompte') === 'epargne-etude');
+
+if (approNom) {
+  approNom.value = isMineur && nomTuteurFinal ? nomTuteurFinal : fullName;
+  approNom.dispatchEvent(new Event('input'));
+}
 
     // ── SI DÉJÀ SIGNÉ PAR LE CLIENT → case cochée en lecture seule ──
     const signed = f['conventionCompteSigned'] && f['conventionCompteSigned'].booleanValue === true;
