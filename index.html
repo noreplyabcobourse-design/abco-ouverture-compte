@@ -392,6 +392,29 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
     <label class="radio-opt"><input type="radio" name="matrimonial-conj" value="Autre"> Autre</label>
 	</div>
 	</div>
+	<div id="wrap-pro-tuteur" style="display:none;">
+	<div class="fg"><label>Statut professionnel <span class="req">*</span></label>
+    <div class="radio-group">
+      <label class="radio-opt"><input type="radio" name="statut-pro-conj" value="Cadre dirigeant"> Cadre dirigeant</label>
+      <label class="radio-opt"><input type="radio" name="statut-pro-conj" value="Employé(e)/Cadre"> Employé(e)/Cadre</label>
+      <label class="radio-opt"><input type="radio" name="statut-pro-conj" value="Profession libérale"> Profession libérale</label>
+      <label class="radio-opt"><input type="radio" name="statut-pro-conj" value="Retraité(e)"> Retraité(e)</label>
+      <label class="radio-opt"><input type="radio" name="statut-pro-conj" value="Étudiant(e)"> Étudiant(e)</label>
+      <label class="radio-opt"><input type="radio" name="statut-pro-conj" value="Commerçant"> Commerçant/Artisan</label>
+      <label class="radio-opt"><input type="radio" name="statut-pro-conj" value="Sans profession"> Sans profession</label>
+      <label class="radio-opt"><input type="radio" name="statut-pro-conj" value="Autre"> Autre</label>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="fg"><label>Profession / Activité <span class="req">*</span></label><input type="text" id="profession-conj" placeholder="Votre métier"></div>
+    <div class="fg"><label>Employeur <span class="req">*</span></label><input type="text" id="employeur-conj" placeholder="Nom de l'entreprise"></div>
+    <div class="fg"><label>Secteur d'activité <span class="req">*</span></label><input type="text" id="secteur-conj" placeholder="Finance, Santé, IT..."></div>
+    <div class="fg"><label>Adresse de l'employeur <span class="req">*</span></label><input type="text" id="adresse-employeur-conj" placeholder="Adresse complète"></div>
+    <div class="fg span2"><label>Ancienneté dans cette entreprise <span class="req">*</span></label><input type="text" id="anciennete-conj" placeholder="Ex: 5 ans"></div>
+  </div>
+</div>
+	
+	
 	
 	
     <div class="fg" id="lien-tuteur-wrap" style="display:none;"><label>Lien avec le tuteur</label>
@@ -1370,7 +1393,9 @@ async function submitForm() {
       lienTuteur:g("lien-tuteur"),
       matrimonial:gc("matrimonial"), matrimonialConj:gc("matrimonial-conj"), statutPro:gc("statut-pro"),
       profession:g("profession"), employeur:g("employeur"), secteur:g("secteur"),
-      adresseEmployeur:g("adresse-employeur"), anciennete:g("anciennete"),
+      adresseEmployeur:g("adresse-employeur"), anciennete:g("anciennete"), statutProConj:gc("statut-pro-conj"),
+	  professionConj:g("profession-conj"), employeurConj:g("employeur-conj"), secteurConj:g("secteur-conj"),
+	  adresseEmployeurConj:g("adresse-employeur-conj"), ancienneteConj:g("anciennete-conj"),
       contactUrgenceNom:g("contact-urgence-nom"), contactUrgenceTel:g("contact-urgence-tel"),
       beneficiairesDeces:gc("beneficiaires-deces"), beneficiairesNom:g("beneficiaires-nom"),
       entreeRelation:gc("entree-relation"),
@@ -1498,6 +1523,12 @@ const isMineur = (type === 'mineur' || type === 'epargne-etude');
 if (wrapMatrimonial) wrapMatrimonial.style.display  = isMineur ? 'none' : 'block';
 if (wrapStatutPro)   wrapStatutPro.style.display    = isMineur ? 'none' : 'block';
 if (wrapProDetails)  wrapProDetails.style.display   = isMineur ? 'none' : 'block';
+// Masquer tout le box situation pro pour compte mineur
+const boxSituationPro = document.getElementById('box-situation-pro');
+if (boxSituationPro) boxSituationPro.style.display = isMineur ? 'none' : 'block';
+//POUR LE CHAMP tuteur
+const wrapProTuteur = document.getElementById('wrap-pro-tuteur');
+if (wrapProTuteur) wrapProTuteur.style.display = isMineur ? 'block' : 'none';
 
 // Gérer le required des champs masqués
 ['profession','employeur','secteur','adresse-employeur','anciennete'].forEach(function(id) {
