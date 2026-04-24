@@ -1079,6 +1079,9 @@ if (v('typeCompte') === 'mineur' || v('typeCompte') === 'epargne-etude') {
   const nomTuteur = ((v('prenomConj') || '') + ' ' + (v('nomConj') || '')).trim();
   if (nomTuteur) {
     fill('appro-nom', nomTuteur);
+// Déclencher manuellement la mise à jour du nom sous signature
+    const approNomEl = document.getElementById('appro-nom');
+    if (approNomEl) approNomEl.dispatchEvent(new Event('input'));
     const sigNomClient = document.getElementById('sig-nom-client');
     if (sigNomClient) sigNomClient.textContent = nomTuteur;
   }
