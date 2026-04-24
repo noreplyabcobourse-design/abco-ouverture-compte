@@ -383,6 +383,17 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
       <div class="fg"><label>Email <span class="req">*</span></label><input type="email" id="email-conj" required placeholder="email@exemple.com"></div>
       <div class="fg"><label>Téléphone <span class="req">*</span></label><input type="tel" id="telephone-conj" required placeholder="+221 77 000 00 00"></div>
     </div>
+	<div class="fg" id="matrimonial-conj-wrap" style="display:none;">
+	<label>Statut matrimonial <span class="req">*</span></label>
+	<div class="radio-group">
+    <label class="radio-opt"><input type="radio" name="matrimonial-conj" value="Célibataire"> Célibataire</label>
+    <label class="radio-opt"><input type="radio" name="matrimonial-conj" value="Marié(e)"> Marié(e)</label>
+    <label class="radio-opt"><input type="radio" name="matrimonial-conj" value="Veuf/Veuve"> Veuf/Veuve</label>
+    <label class="radio-opt"><input type="radio" name="matrimonial-conj" value="Autre"> Autre</label>
+	</div>
+	</div>
+	
+	
     <div class="fg" id="lien-tuteur-wrap" style="display:none;"><label>Lien avec le tuteur</label>
       <select id="lien-tuteur" required><option value="">— Sélectionner —</option><option>Père</option><option>Mère</option><option>Tuteur légal</option><option>Grand-parent</option><option>Autre</option></select>
     </div>
@@ -1357,7 +1368,7 @@ async function submitForm() {
       idTypeConj:gc("id-type-conj"), idNumberConj:g("id-number-conj"),idDelivranceConj:g("id-delivrance-conj"), idExpirationConj:g("id-expiration-conj"),
       adresseConj:g("adresse-conj"), emailConj:g("email-conj"), telephoneConj:g("telephone-conj"),
       lienTuteur:g("lien-tuteur"),
-      matrimonial:gc("matrimonial"), statutPro:gc("statut-pro"),
+      matrimonial:gc("matrimonial"), matrimonialConj:gc("matrimonial-conj"), statutPro:gc("statut-pro"),
       profession:g("profession"), employeur:g("employeur"), secteur:g("secteur"),
       adresseEmployeur:g("adresse-employeur"), anciennete:g("anciennete"),
       contactUrgenceNom:g("contact-urgence-nom"), contactUrgenceTel:g("contact-urgence-tel"),
@@ -1472,6 +1483,13 @@ document.getElementById('id-expiration').addEventListener('change', function() {
       box.style.display = "none";
       conjFields.forEach(function(id) { var el=document.getElementById(id); if(el) el.required=false; });
     }
+	// Afficher matrimonial tuteur uniquement pour mineur/epargne-etude
+    const matrimonialConjWrap = document.getElementById('matrimonial-conj-wrap');
+    if (matrimonialConjWrap) {
+      matrimonialConjWrap.style.display = (type === 'mineur' || type === 'epargne-etude') ? 'block' : 'none';
+    }
+
+	
   // Mettre à jour date max naissance selon type
     var dobEl = document.getElementById('dob');
     if (dobEl) {
