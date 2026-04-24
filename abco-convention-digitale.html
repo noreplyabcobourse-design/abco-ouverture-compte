@@ -332,6 +332,7 @@ input.appro-nom{
   <div class="sec">3. Élection domicile</div>
   <table class="t-dom">
     <thead><tr><th>Informations</th><th>Titulaire</th><th>Co-titulaire</th></tr></thead>
+	<thead><tr><th>Informations</th><th>Titulaire</th><th id="th-col3">Co-titulaire</th></tr></thead>
     <tbody>
       <tr>
         <td class="lbl">Civilité</td>
@@ -390,14 +391,15 @@ input.appro-nom{
       <tr><td class="lbl">Date de délivrance</td><td><input class="f" id="dom-deliv-t" placeholder="jj/mm/aaaa"></td><td><input class="f" id="dom-deliv-c" placeholder="jj/mm/aaaa"></td></tr>
       <tr><td class="lbl">Date d'expiration</td><td><input class="f" id="dom-expir-t" placeholder="jj/mm/aaaa"></td><td><input class="f" id="dom-expir-c" placeholder="jj/mm/aaaa"></td></tr>
       <tr><td class="lbl">Email</td><td><input class="f" id="dom-email-t" placeholder="email@exemple.com"></td><td><input class="f" id="dom-email-c" placeholder="email@exemple.com"></td></tr>
-      <tr>
-        <td class="lbl">Type de compte</td>
-        <td colspan="2"><div class="row-cb">
-          <div class="cb-item" onclick="radio('type',this)"><span class="bx" data-g="type"></span> Compte individuel</div>
-          <div class="cb-item" onclick="radio('type',this)"><span class="bx" data-g="type"></span> Compte joint</div>
-          <div class="cb-item" onclick="radio('type',this)"><span class="bx" data-g="type"></span> Personne morale</div>
-        </div></td>
-      </tr>
+     <tr>
+	  <td class="lbl">Type de compte</td>
+	  <td colspan="2"><div class="row-cb">
+       <div class="cb-item" onclick="radio('type',this)"><span class="bx" data-g="type"></span> Compte individuel</div>
+       <div class="cb-item" onclick="radio('type',this)"><span class="bx" data-g="type"></span> Compte joint</div>
+       <div class="cb-item" onclick="radio('type',this)"><span class="bx" data-g="type"></span> Compte mineur</div>
+       <div class="cb-item" onclick="radio('type',this)"><span class="bx" data-g="type"></span> Personne morale</div>
+		</div></td>
+	</tr>
     </tbody>
   </table>
   
@@ -1019,7 +1021,7 @@ if (v('nomConj') || v('prenomConj')) {
     fill('c-cni',     v('idNumber'));
     fill('c-benef',   v('beneficiairesNom'));
 
-    // ── TYPE DE COMPTE ──
+   // ── TYPE DE COMPTE ──
     const typeCompte = v('typeCompte');
     if (typeCompte) {
       // Correspondance entre valeurs Firestore et labels convention
@@ -1028,7 +1030,7 @@ if (v('nomConj') || v('prenomConj')) {
         'individuel-mandat':      'Compte individuel',
         'individuel-procuration': 'Compte individuel',
         'conjoint':               'Compte joint',
-        'mineur':                 'Compte individuel',
+        'mineur':                 'Compte mineur',
         'epargne-etude':          'Compte individuel',
         'retraite':               'Compte individuel',
       };
@@ -1038,6 +1040,16 @@ if (v('nomConj') || v('prenomConj')) {
         const label = bx.parentElement.textContent.trim();
         if (label === labelCible) bx.classList.add('on');
       });
+
+      // Renommer la 3ème colonne selon le type de compte
+      const thCol3 = document.getElementById('th-col3');
+      if (thCol3) {
+        if (typeCompte === 'mineur' || typeCompte === 'epargne-etude') {
+          thCol3.textContent = 'Tuteur';
+        } else {
+          thCol3.textContent = 'Co-titulaire';
+        }
+      }
     }
 
     // ── BÉNÉFICIAIRE DÉCÈS (Article 11) ──
