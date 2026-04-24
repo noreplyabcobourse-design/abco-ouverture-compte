@@ -399,9 +399,9 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
     </div>
   </div>
 
-  <div class="box">
+<div class="box" id="box-situation-pro">
     <h3>📋 Situation personnelle & professionnelle</h3>
-    <div class="fg"><label>Statut matrimonial <span class="req">*</span></label>
+    <div class="fg" id="wrap-matrimonial"><label>Statut matrimonial <span class="req">*</span></label>
       <div class="radio-group">
         <label class="radio-opt"><input type="radio" name="matrimonial" value="Célibataire"> Célibataire</label>
         <label class="radio-opt"><input type="radio" name="matrimonial" value="Marié(e)"> Marié(e)</label>
@@ -409,7 +409,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
         <label class="radio-opt"><input type="radio" name="matrimonial" value="Autre"> Autre</label>
       </div>
     </div>
-    <div class="fg"><label>Statut professionnel <span class="req">*</span></label>
+    <div class="fg" id="wrap-statut-pro"><label>Statut professionnel <span class="req">*</span></label>
       <div class="radio-group">
         <label class="radio-opt"><input type="radio" name="statut-pro" value="Cadre dirigeant"> Cadre dirigeant</label>
         <label class="radio-opt"><input type="radio" name="statut-pro" value="Employé(e)/Cadre"> Employé(e)/Cadre</label>
@@ -421,7 +421,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);fon
         <label class="radio-opt"><input type="radio" name="statut-pro" value="Autre"> Autre</label>
       </div>
     </div>
-    <div class="grid2">
+    <div class="grid2" id="wrap-pro-details">
       <div class="fg"><label>Profession / Activité <span class="req">*</span></label><input type="text" id="profession" placeholder="Votre métier" required></div>
       <div class="fg"><label>Employeur <span class="req">*</span></label><input type="text" id="employeur" placeholder="Nom de l'entreprise" required></div>
       <div class="fg"><label>Secteur d'activité <span class="req">*</span></label><input type="text" id="secteur" placeholder="Finance, Santé, IT..." required></div>
@@ -1488,6 +1488,22 @@ document.getElementById('id-expiration').addEventListener('change', function() {
     if (matrimonialConjWrap) {
       matrimonialConjWrap.style.display = (type === 'mineur' || type === 'epargne-etude') ? 'block' : 'none';
     }
+	
+	// Masquer situation pro pour compte mineur
+const wrapMatrimonial = document.getElementById('wrap-matrimonial');
+const wrapStatutPro   = document.getElementById('wrap-statut-pro');
+const wrapProDetails  = document.getElementById('wrap-pro-details');
+const isMineur = (type === 'mineur' || type === 'epargne-etude');
+
+if (wrapMatrimonial) wrapMatrimonial.style.display  = isMineur ? 'none' : 'block';
+if (wrapStatutPro)   wrapStatutPro.style.display    = isMineur ? 'none' : 'block';
+if (wrapProDetails)  wrapProDetails.style.display   = isMineur ? 'none' : 'block';
+
+// Gérer le required des champs masqués
+['profession','employeur','secteur','adresse-employeur','anciennete'].forEach(function(id) {
+  var el = document.getElementById(id);
+  if (el) el.required = !isMineur;
+});
 
 	
   // Mettre à jour date max naissance selon type
