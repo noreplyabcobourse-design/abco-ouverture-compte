@@ -879,7 +879,8 @@ function toast(msg) {
     fill('c-prof',    v('profession'));
     fill('c-tel',     v('telephone'));
     fill('appro-nom', (v('prenom') + ' ' + v('nom')).trim());
-
+	
+	
     // ── TABLEAU DOMICILE (Section 3) ──
     fill('dom-nom-t',     v('nom'));
     fill('dom-prenom-t',  v('prenom'));
@@ -1070,6 +1071,16 @@ if (typeCompte === 'mineur' || typeCompte === 'epargne-etude') {
     const sous = sigBlocClient.querySelector('.sig-sous');
     if (titre) titre.textContent = 'Le Client';
     if (sous) sous.textContent = 'Titulaire du compte';
+  }
+}
+
+// Pour compte mineur — remplir appro-nom et sig-nom-client avec le nom du tuteur
+if (v('typeCompte') === 'mineur' || v('typeCompte') === 'epargne-etude') {
+  const nomTuteur = ((v('prenomConj') || '') + ' ' + (v('nomConj') || '')).trim();
+  if (nomTuteur) {
+    fill('appro-nom', nomTuteur);
+    const sigNomClient = document.getElementById('sig-nom-client');
+    if (sigNomClient) sigNomClient.textContent = nomTuteur;
   }
 }
 
