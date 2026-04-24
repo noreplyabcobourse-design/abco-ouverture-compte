@@ -1051,6 +1051,25 @@ if (v('nomConj') || v('prenomConj')) {
         }
       }
     }
+	
+	// Adapter les blocs de signature selon le type de compte
+const sigBlocConj = document.getElementById('sig-bloc-conj');
+const sigTitreClient = document.querySelector('#sig-zone').closest('.sig-bloc').querySelector('.sig-titre');
+const sigSousClient = document.querySelector('#sig-zone').closest('.sig-bloc').querySelector('.sig-sous');
+const sigTitreConj = sigBlocConj ? sigBlocConj.querySelector('.sig-titre') : null;
+const sigSousConj = sigBlocConj ? sigBlocConj.querySelector('.sig-sous') : null;
+
+if (typeCompte === 'mineur' || typeCompte === 'epargne-etude') {
+  // Titulaire devient "Le Tuteur"
+  if (sigTitreClient) sigTitreClient.textContent = 'Le Tuteur';
+  if (sigSousClient) sigSousClient.textContent = 'Tuteur du compte';
+  // Masquer le bloc co-titulaire
+  if (sigBlocConj) sigBlocConj.style.display = 'none';
+} else {
+  // Remettre les labels par défaut
+  if (sigTitreClient) sigTitreClient.textContent = 'Le Client';
+  if (sigSousClient) sigSousClient.textContent = 'Titulaire du compte';
+}
 
     // ── BÉNÉFICIAIRE DÉCÈS (Article 11) ──
     fill('f-benef', v('beneficiairesNom'));
