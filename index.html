@@ -991,6 +991,14 @@ if (step === 2) {
     }
   }
 }
+// Step 2 : validation date-delivrance anterieure à date-expiration
+const deliv = document.getElementById('id-delivrance');
+const expir = document.getElementById('id-expiration');
+if (deliv && expir && deliv.value && expir.value && expir.value <= deliv.value) {
+  expir.classList.add('invalid');
+  showToast("La date d'expiration doit être postérieure à la date de délivrance", 'error');
+  return false;
+}
 
   // Step 4 : signature obligatoire
   if (step === 4) {
@@ -1418,6 +1426,25 @@ if (dobConjEl) {
   dobConjEl.max = mxConj.toISOString().split('T')[0];
 }
 
+// Contrôle date expiration > date délivrance
+document.getElementById('id-delivrance').addEventListener('change', function() {
+  var expEl = document.getElementById('id-expiration');
+  if (this.value) {
+    expEl.min = this.value;
+    if (expEl.value && expEl.value <= this.value) {
+      expEl.value = '';
+      showToast("La date d'expiration doit être postérieure à la date de délivrance", 'error');
+    }
+  }
+});
+
+document.getElementById('id-expiration').addEventListener('change', function() {
+  var delEl = document.getElementById('id-delivrance');
+  if (delEl.value && this.value <= delEl.value) {
+    this.value = '';
+    showToast("La date d'expiration doit être postérieure à la date de délivrance", 'error');
+  }
+});
 
   // -- Selection des cartes de compte (event delegation) --
   const grid = document.getElementById("account-cards-grid");
