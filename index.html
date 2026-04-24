@@ -1409,22 +1409,8 @@ function onSmileIDClick() {
 // ==============================================
 // INIT AU CHARGEMENT DE LA PAGE
 // ==============================================
+// Date max naissance conjoint = aujourd'hui - 18 ans
 document.addEventListener("DOMContentLoaded", function() {
-
- // Date max naissance
-var dobEl = document.getElementById('dob');
-if (dobEl) {
-  if (accountType === 'mineur') {
-    // Pas de restriction — date max = aujourd'hui
-    dobEl.max = new Date().toISOString().split('T')[0];
-  } else {
-    // Majeurs uniquement — date max = aujourd'hui - 18 ans
-    var mx = new Date();
-    mx.setFullYear(mx.getFullYear() - 18);
-    dobEl.max = mx.toISOString().split('T')[0];
-  }
-}
-  // Date max naissance conjoint = aujourd'hui - 18 ans
 var dobConjEl = document.getElementById('dob-conj');
 if (dobConjEl) {
   var mxConj = new Date();
