@@ -1054,7 +1054,7 @@ if (v('nomConj') || v('prenomConj')) {
 	
 	// Adapter les blocs de signature selon le type de compte
 const sigBlocClient = document.getElementById('sig-zone') ? document.getElementById('sig-zone').closest('.sig-bloc') : null;
-const sigBlocConj = document.getElementById('sig-bloc-conj');
+const sigBlocConjSig = document.getElementById('sig-bloc-conj');
 
 if (typeCompte === 'mineur' || typeCompte === 'epargne-etude') {
   if (sigBlocClient) {
@@ -1063,7 +1063,7 @@ if (typeCompte === 'mineur' || typeCompte === 'epargne-etude') {
     if (titre) titre.textContent = 'Le Tuteur';
     if (sous) sous.textContent = 'Tuteur du compte';
   }
-  if (sigBlocConj) sigBlocConj.style.display = 'none';
+  if (sigBlocConjSig) sigBlocConjSig.style.display = 'none';
 } else {
   if (sigBlocClient) {
     const titre = sigBlocClient.querySelector('.sig-titre');
