@@ -877,11 +877,45 @@ if (nomConj && approConjWrap) {
 
     // ── NOM dans "Lu et approuvé" (case à cocher laissée au client) ──
     const approNom = document.getElementById('appro-nom');
-    const fullName  = ((v('prenom') || '') + ' ' + (v('nom') || '')).trim();
-    if (approNom && fullName) {
-      approNom.value = fullName;
-      approNom.dispatchEvent(new Event('input'));
-    }
+const fullName = ((v('prenom') || '') + ' ' + (v('nom') || '')).trim();
+const nomTuteurFinal = ((v('prenomConj') || '') + ' ' + (v('nomConj') || '')).trim();
+const isMineur = (v('typeCompte') === 'mineur' || v('typeCompte') === 'epargne-etude');
+
+if (approNom) {
+  approNom.value = isMineur && nomTuteurFinal ? nomTuteurFinal : fullName;
+  approNom.dispatchEvent(new Event('input'));
+}
+
+// Masquer co-titulaire dans "Lu et approuvé" pour compte mineur
+const approConjWrapMineur = document.getElementById('appro-conj-wrap');
+if (isMineur && approConjWrapMineur) approConjWrapMineur.style.display = 'none';
+
+// Adapter bloc signature selon type de compte
+const sigBlocClientBel = document.getElementById('sig-zone-client') ? document.getElementById('sig-zone-client').closest('.sig-bloc') : null;
+const sigBlocConjBel = document.getElementById('sig-bloc-conj');
+
+if (isMineur) {
+  if (sigBlocClientBel) {
+    const titre = sigBlocClientBel.querySelector('.sig-nom');
+    const sous  = sigBlocClientBel.querySelector('.sig-sous');
+    if (titre) titre.textContent = 'Le Tuteur';
+    if (sous)  sous.textContent  = 'Tuteur du compte';
+  }
+  if (sigBlocConjBel) sigBlocConjBel.style.display = 'none';
+} else {
+  if (sigBlocClientBel) {
+    const titre = sigBlocClientBel.querySelector('.sig-nom');
+    const sous  = sigBlocClientBel.querySelector('.sig-sous');
+    if (titre) titre.textContent = 'Le Client';
+    if (sous)  sous.textContent  = 'Titulaire du compte';
+  }
+}
+
+	  // Nom sous signature — tuteur ou titulaire
+const sigNomLabel = document.getElementById('sig-nom-label');
+if (sigNomLabel) {
+  sigNomLabel.textContent = isMineur && nomTuteurFinal ? nomTuteurFinal : fullName;
+}
 
     // ── SI DÉJÀ SIGNÉ PAR LE CLIENT → case cochée en lecture seule ──
     const signed = f['conventionBelSigned'] && f['conventionBelSigned'].booleanValue === true;
