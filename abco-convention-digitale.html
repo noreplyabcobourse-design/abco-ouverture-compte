@@ -1213,10 +1213,11 @@ if (approNom) {
   approNom.value = isMineur && nomTuteurFinal ? nomTuteurFinal : fullName;
   approNom.dispatchEvent(new Event('input'));
 }
+
 	  // Masquer le champ co-titulaire dans "Lu et approuvé" pour compte mineur
-const approConjWrap = document.getElementById('appro-conj-wrap');
-if (isMineur && approConjWrap) {
-  approConjWrap.style.display = 'none';
+const approConjWrapMineur = document.getElementById('appro-conj-wrap');
+if (isMineur && approConjWrapMineur) {
+  approConjWrapMineur.style.display = 'none';
 }
 
     // ── SI DÉJÀ SIGNÉ PAR LE CLIENT → case cochée en lecture seule ──
